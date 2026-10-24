@@ -59,6 +59,7 @@ import { createBundleErrorStamp } from "./bundle-stamp.js";
 import { createSleepBlocker } from "./sleep-blocker.js";
 import { withOpenCors } from "./cors.js";
 import { createShutdown } from "./shutdown.js";
+import { DesktopIntegration } from "./tray.js";
 import {
   computeDragBounds,
   isInTopSnapZone,
@@ -70,7 +71,11 @@ import {
   NativeSnapPreview,
 } from "./snap-native.js";
 import { DiscordRpcManager } from "./discord.js";
-import { PoTokenService } from "./youtube/potoken.js";
+import {
+  PoTokenService,
+  POTOKEN_IDLE_MS,
+  POTOKEN_IDLE_MS_PERFORMANCE,
+} from "./youtube/potoken.js";
 import {
   YOUTUBE_REQUEST_URLS,
   youtubeOriginFor,
@@ -103,6 +108,10 @@ process.env.APP_ROOT = path.join(__dirname, "..");
 export const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 
+// Liner 2.0 is a local build: upstream's OTA bundles and GitHub releases would
+// replace it with stock Liner, so both update channels stay off.
+const REMOTE_UPDATES_ENABLED = false;
+
 process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? path.join(process.env.APP_ROOT, "public")
   : RENDERER_DIST;
@@ -114,6 +123,7 @@ let thumbar: ThumbarController | null = null;
 let bundleManager: BundleManager | null = null;
 let discordRpcManager: DiscordRpcManager | null = null;
 let poTokenService: PoTokenService | null = null;
+let desktop: DesktopIntegration | null = null;
 
 // every helper process we spawn (tracert, icon cache refresh, ...) is tracked so
 // quitting can kill whatever is still running instead of leaving orphans behind
@@ -181,6 +191,10 @@ const shutdown = createShutdown({
     () => {
       poTokenService?.destroy();
       poTokenService = null;
+    },
+    () => {
+      desktop?.destroy();
+      desktop = null;
     },
     () => globalShortcut.unregisterAll(),
     () => {
@@ -252,6 +266,8 @@ function createWindow() {
       devTools: true,
       backgroundThrottling: false, // keeps audio timer and playback ticks running when app is in background or another workspace
       webSecurity: true,
+      // nothing in the app needs spellcheck, and its dictionaries cost memory
+      spellcheck: false,
     },
   });
 
@@ -366,6 +382,8 @@ function createWindow() {
 
   if (process.env.VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+  } else if (!REMOTE_UPDATES_ENABLED) {
+    mainWindow.loadFile(path.join(RENDERER_DIST, "index.html"));
   } else {
     bundleManager = new BundleManager({
       defaultRendererDist: RENDERER_DIST,
@@ -381,8 +399,17 @@ function createWindow() {
   }
 
   mainWindow.once("ready-to-show", () => {
+    // started by the windows login item: wait in the tray
+    if (desktop?.startHidden()) return;
     mainWindow?.show();
     mainWindow?.focus();
+  });
+
+  mainWindow.on("close", (event) => {
+    if (desktop?.shouldHideOnClose() && !shutdown.isQuitting()) {
+      event.preventDefault();
+      mainWindow?.hide();
+    }
   });
 
   // renderer ready, deliver any cold-start deeplink waiting in the queue
@@ -1444,6 +1471,16 @@ if (!gotTheLock) {
       (listener) => authSessions.onChange(() => listener()),
     );
 
+    desktop = new DesktopIntegration({
+      getWindow: () => mainWindow,
+      sendAction: (type) => {
+        if (mainWindow && !mainWindow.isDestroyed())
+          mainWindow.webContents.send("overlay:action", { type });
+      },
+      quit: () => shutdown.quit(),
+      iconPath: path.join(process.env.VITE_PUBLIC!, "icon.png"),
+    });
+
     createWindow();
 
     // offline-dump diagnostics: real dns + tcp from the user machine.
@@ -1811,6 +1848,9 @@ if (!gotTheLock) {
       if (!app.isPackaged) {
         return { available: false, error: "Updater is disabled in dev mode" };
       }
+      if (!REMOTE_UPDATES_ENABLED) {
+        return { available: false };
+      }
       try {
         const result = await autoUpdater.checkForUpdates();
         return {
@@ -1836,6 +1876,9 @@ if (!gotTheLock) {
       if (!app.isPackaged) {
         return { success: false, error: "Updater is disabled in dev mode" };
       }
+      if (!REMOTE_UPDATES_ENABLED) {
+        return { success: false, error: "Updates are disabled in Liner 2.0" };
+      }
       try {
         await autoUpdater.downloadUpdate();
         return { success: true };
@@ -1852,6 +1895,12 @@ if (!gotTheLock) {
         autoUpdater.quitAndInstall(false, true);
       });
       return true;
+    });
+
+    ipcMain.on("app:set-performance-mode", (_event, enabled: unknown) => {
+      poTokenService?.setIdleTimeout(
+        enabled === true ? POTOKEN_IDLE_MS_PERFORMANCE : POTOKEN_IDLE_MS,
+      );
     });
 
     // OTA bundle updater IPC handlers
@@ -1896,7 +1945,7 @@ if (!gotTheLock) {
     });
 
     // automatic update check after window initialization (packaged app only)
-    if (app.isPackaged) {
+    if (app.isPackaged && REMOTE_UPDATES_ENABLED) {
       setTimeout(() => {
         autoUpdater.checkForUpdates().catch((err) => {
           console.error(

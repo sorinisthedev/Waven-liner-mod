@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "description": "Liner Music Player",
+  "productName": "Liner 2.0",
   "author": {
     "name": "hkamori",
     "email": "dev@tryliner.fun"
@@ -30,9 +31,9 @@
     "native:build": "pnpm dlx node-gyp@12 rebuild --directory native/snap-preview && node scripts/verify-native-addon.cjs"
   },
   "build": {
-    "appId": "com.hkamori.liner",
-    "productName": "Liner",
-    "executableName": "liner",
+    "appId": "com.liner2.app",
+    "productName": "Liner 2.0",
+    "executableName": "liner2",
     "artifactName": "${productName}-${version}-${arch}.${ext}",
     "publish": [
       {
@@ -76,14 +77,14 @@
       "artifactName": "Liner-${version}.${ext}"
     },
     "win": {
-      "executableName": "liner",
+      "executableName": "liner2",
       "icon": "build/icon.ico",
       "target": [
         "nsis"
       ]
     },
     "nsis": {
-      "artifactName": "Liner-Setup-${version}.${ext}",
+      "artifactName": "Liner-2.0-Setup-${version}.${ext}",
       "allowToChangeInstallationDirectory": true,
       "oneClick": false
     },

@@ -101,7 +101,10 @@ interface ModalState {
 
   // Settings modal
   settingsOpen: boolean;
-  openSettings: () => void;
+  /** tab the settings modal should jump to when it opens, consumed on open */
+  settingsRequestedTab: string | null;
+  openSettings: (tab?: string) => void;
+  openSettingsTab: (tab: string) => void;
   closeSettings: () => void;
   toggleSettings: () => void;
 }
@@ -188,7 +191,13 @@ export const useModalStore = create<ModalState>((set) => ({
   toggleSearch: () => set((state) => ({ searchOpen: !state.searchOpen })),
 
   settingsOpen: false,
-  openSettings: () => set({ settingsOpen: true }),
+  settingsRequestedTab: null,
+  openSettings: (tab) =>
+    set({
+      settingsOpen: true,
+      settingsRequestedTab: typeof tab === "string" ? tab : null,
+    }),
+  openSettingsTab: (tab) => set({ settingsOpen: true, settingsRequestedTab: tab }),
   closeSettings: () => set({ settingsOpen: false }),
   toggleSettings: () => set((state) => ({ settingsOpen: !state.settingsOpen })),
 }));

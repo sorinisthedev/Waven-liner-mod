@@ -25,6 +25,7 @@ import {
 } from "@/shared/ui";
 import { usePageBackdrop } from "@/shared/lib";
 import likesCover from "@/assets/likes-cover.svg";
+import { PinPlaylistButton } from "@/features/pins";
 import { useAuthStore } from "@/features/auth";
 import { userDisplayName } from "@/entities/user";
 import {
@@ -675,6 +676,16 @@ function LibraryPlaylistContent() {
                         onSubmit={handleSearchSubmit}
                         className={HERO_GLASS_CLASS}
                       />
+                      {decodedId && (
+                        <PinPlaylistButton
+                          pin={{
+                            id: decodedId,
+                            title: viewData.title,
+                            coverUrl: isLikesMode ? "" : (viewData.coverUrls?.[0] ?? viewData.coverUrl ?? ""),
+                          }}
+                          className={HERO_GLASS_BUTTON_CLASS}
+                        />
+                      )}
                       <Button
                         variant="secondary"
                         onClick={handleAddToQueue}

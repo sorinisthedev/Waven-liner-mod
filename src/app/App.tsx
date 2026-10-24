@@ -14,6 +14,7 @@ import { AppRoutes } from "./routes";
 import DeeplinkHandler from "./DeeplinkHandler";
 import EnvironmentWarning from "./EnvironmentWarning";
 import { ConnectivityWall } from "@/features/connectivity";
+import { PersonalizationSync, PerformanceMotionConfig } from "@/features/personalization";
 import "./globals.css";
 
 function AppIconSync() {
@@ -64,9 +65,11 @@ export default function App() {
         <TouchBarSync />
         <OverlaySync />
         <DiscordSync />
+        <PersonalizationSync />
         <AppleEmojiProvider>
           <I18nProvider>
             <ToastProvider>
+              <PerformanceMotionConfig>
               <RootErrorBoundary>
                 <WindowAnimationContainer>
                   <DeeplinkHandler />
@@ -77,6 +80,7 @@ export default function App() {
                   </AuthLock>
                 </WindowAnimationContainer>
               </RootErrorBoundary>
+              </PerformanceMotionConfig>
             </ToastProvider>
           </I18nProvider>
         </AppleEmojiProvider>

@@ -17,9 +17,13 @@ import {
   QuestionCircle,
   Database,
   Widget5,
+  UserCircle,
+  Gallery,
+  Tuning2,
+  Monitor,
 } from "@solar-icons/react";
 import Dialog from "@/shared/ui/Dialog";
-import { UserAvatar } from "@/shared/ui";
+import { CurrentUserAvatar } from "@/features/personalization";
 import { useScrollFade } from "@/shared/hooks";
 import { useTranslation, getTranslationsForAllLocales } from "@/languages";
 import { useModalStore } from "@/features/library";
@@ -34,9 +38,17 @@ import {
   OverlayTab,
   DiscordTab,
   YoutubeTab,
+  ProfileTab,
+  WallpaperTab,
+  SoundTab,
+  DesktopTab,
 } from "./tabs";
 
 type TabId =
+  | "Profile"
+  | "Personalize"
+  | "Sound"
+  | "Desktop"
   | "Playback"
   | "Shortcuts"
   | "Overlay"
@@ -50,6 +62,10 @@ const navGroupClass =
   "flex flex-col gap-[1px] rounded-[14px] bg-bg-surface/70 p-[4px] dark:bg-white/[0.06]";
 
 const TAB_ICONS: Record<TabId, React.ComponentType<any>> = {
+  Profile: UserCircle,
+  Personalize: Gallery,
+  Sound: Tuning2,
+  Desktop: Monitor,
   Playback: Play,
   Shortcuts: KeyboardLine,
   Overlay: Widget5,
@@ -60,16 +76,158 @@ const TAB_ICONS: Record<TabId, React.ComponentType<any>> = {
   About: InfoCircle,
 };
 
-type TabGroupKey = "player" | "interface" | "integrations" | "application";
+type TabGroupKey =
+  | "account"
+  | "player"
+  | "interface"
+  | "integrations"
+  | "application";
+
+const ALL_TAB_IDS: readonly TabId[] = [
+  "Profile",
+  "Personalize",
+  "Sound",
+  "Desktop",
+  "Playback",
+  "Shortcuts",
+  "Overlay",
+  "Discord",
+  "Youtube",
+  "Appearance",
+  "Storage",
+  "About",
+];
+
+const isTabId = (value: unknown): value is TabId =>
+  typeof value === "string" && (ALL_TAB_IDS as readonly string[]).includes(value);
 
 const TAB_GROUPS: { labelKey: TabGroupKey; ids: TabId[] }[] = [
-  { labelKey: "player", ids: ["Playback", "Shortcuts"] },
-  { labelKey: "interface", ids: ["Appearance", "Overlay"] },
+  { labelKey: "account", ids: ["Profile"] },
+  { labelKey: "player", ids: ["Playback", "Sound", "Shortcuts"] },
+  { labelKey: "interface", ids: ["Appearance", "Personalize", "Overlay"] },
   { labelKey: "integrations", ids: ["Youtube", "Discord"] },
-  { labelKey: "application", ids: ["Storage", "About"] },
+  { labelKey: "application", ids: ["Desktop", "Storage", "About"] },
 ];
 
 const SETTING_ITEMS: { tabId: TabId; titleKey: string; descKey?: string }[] = [
+  // Profile
+  {
+    tabId: "Profile",
+    titleKey: "settings.profile_custom.upload",
+    descKey: "settings.profile_custom.avatar_hint",
+  },
+  {
+    tabId: "Profile",
+    titleKey: "settings.profile_custom.shape_title",
+    descKey: "settings.profile_custom.shape_description",
+  },
+  {
+    tabId: "Profile",
+    titleKey: "settings.profile_custom.name_title",
+    descKey: "settings.profile_custom.name_description",
+  },
+
+  // Desktop
+  {
+    tabId: "Desktop",
+    titleKey: "settings.desktop.tray_title",
+    descKey: "settings.desktop.tray_description",
+  },
+  {
+    tabId: "Desktop",
+    titleKey: "settings.desktop.login_title",
+    descKey: "settings.desktop.login_description",
+  },
+  {
+    tabId: "Desktop",
+    titleKey: "settings.desktop.backup_title",
+    descKey: "settings.desktop.backup_description",
+  },
+
+  // Sound
+  {
+    tabId: "Sound",
+    titleKey: "settings.sound.eq_title",
+    descKey: "settings.sound.eq_description",
+  },
+  {
+    tabId: "Sound",
+    titleKey: "settings.sound.eq_preset_title",
+    descKey: "settings.sound.eq_preset_description",
+  },
+  {
+    tabId: "Sound",
+    titleKey: "settings.sound.sleep_title",
+    descKey: "settings.sound.sleep_description",
+  },
+  {
+    tabId: "Sound",
+    titleKey: "settings.sound.notify_title",
+    descKey: "settings.sound.notify_description",
+  },
+
+  // Personalize
+  {
+    tabId: "Personalize",
+    titleKey: "settings.theme_builder.enable_title",
+    descKey: "settings.theme_builder.enable_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.performance.title",
+    descKey: "settings.performance.description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.app_font_title",
+    descKey: "settings.personalize.app_font_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.lyrics_size_title",
+    descKey: "settings.personalize.lyrics_size_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.lyrics_font_title",
+    descKey: "settings.personalize.lyrics_font_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.wallpaper_title",
+    descKey: "settings.personalize.wallpaper_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.blur_title",
+    descKey: "settings.personalize.blur_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.dim_title",
+    descKey: "settings.personalize.dim_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.motion_title",
+    descKey: "settings.personalize.motion_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.cover_backdrops_title",
+    descKey: "settings.personalize.cover_backdrops_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.accent_title",
+    descKey: "settings.personalize.accent_description",
+  },
+  {
+    tabId: "Personalize",
+    titleKey: "settings.personalize.reset_title",
+    descKey: "settings.personalize.reset_description",
+  },
+
   // Playback
   {
     tabId: "Playback",
@@ -253,6 +411,7 @@ export default function SettingsModal() {
   const { t } = useTranslation();
   const open = useModalStore((state) => state.settingsOpen);
   const close = useModalStore((state) => state.closeSettings);
+  const requestedTab = useModalStore((state) => state.settingsRequestedTab);
 
   const [activeTab, setActiveTab] = useState<TabId>("Playback");
   const [searchQuery, setSearchQuery] = useState("");
@@ -264,12 +423,26 @@ export default function SettingsModal() {
   } = useScrollFade<HTMLElement>();
   const searchCentered = !searchQuery && !searchFocused;
 
+  // another part of the app (e.g. the home avatar) asked for a specific tab
+  useEffect(() => {
+    if (!open || !requestedTab) return;
+    if (isTabId(requestedTab)) {
+      setSearchQuery("");
+      setActiveTab(requestedTab);
+    }
+    useModalStore.setState({ settingsRequestedTab: null });
+  }, [open, requestedTab]);
+
   const handleClose = () => {
     setSearchQuery("");
     close();
   };
 
   const tabLabels: Record<TabId, string> = {
+    Profile: t("settings.tabs.profile"),
+    Personalize: t("settings.tabs.personalize"),
+    Sound: t("settings.tabs.sound"),
+    Desktop: t("settings.tabs.desktop"),
     Playback: t("settings.tabs.playback"),
     Shortcuts: t("settings.tabs.shortcuts") || "Shortcuts",
     Overlay: t("settings.tabs.overlay") || "Overlay",
@@ -281,6 +454,10 @@ export default function SettingsModal() {
   };
 
   const tabDescriptions: Record<TabId, string> = {
+    Profile: t("settings.profile_custom.description"),
+    Personalize: t("settings.personalize.description"),
+    Sound: t("settings.sound.description"),
+    Desktop: t("settings.desktop.description"),
     Playback: t("settings.playback.description"),
     Shortcuts:
       t("settings.shortcuts.description") ||
@@ -305,6 +482,10 @@ export default function SettingsModal() {
     const set = new Set<TabId>();
 
     const TAB_LABEL_KEYS: Record<TabId, string> = {
+      Profile: "settings.tabs.profile",
+      Personalize: "settings.tabs.personalize",
+      Sound: "settings.tabs.sound",
+      Desktop: "settings.tabs.desktop",
       Playback: "settings.tabs.playback",
       Shortcuts: "settings.tabs.shortcuts",
       Overlay: "settings.tabs.overlay",
@@ -316,6 +497,10 @@ export default function SettingsModal() {
     };
 
     const TAB_DESC_KEYS: Record<TabId, string> = {
+      Profile: "settings.profile_custom.description",
+      Personalize: "settings.personalize.description",
+      Sound: "settings.sound.description",
+      Desktop: "settings.desktop.description",
       Playback: "settings.playback.description",
       Shortcuts: "settings.shortcuts.description",
       Overlay: "settings.overlay.description",
@@ -540,9 +725,18 @@ export default function SettingsModal() {
         </nav>
 
         <div className="shrink-0 p-[12px] pt-[8px]">
-          <div className="flex items-center gap-[10px] px-[6px] py-[4px] min-w-0">
+          <div className="flex items-center gap-[4px] min-w-0">
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery("");
+                setActiveTab("Profile");
+              }}
+              title={t("settings.profile.edit_profile")}
+              className="flex flex-1 min-w-0 items-center gap-[10px] px-[6px] py-[4px] rounded-[10px] border-0 bg-transparent text-left cursor-pointer transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
+            >
             <span className="relative shrink-0">
-              <UserAvatar user={user ?? null} size={32} />
+              <CurrentUserAvatar user={user ?? null} size={32} />
               <span
                 className="absolute right-[-1px] bottom-[-1px] w-[10px] h-[10px] rounded-full bg-[#12B76A] border-2 border-bg-primary"
                 aria-hidden
@@ -562,6 +756,7 @@ export default function SettingsModal() {
                 {handle}
               </span>
             </span>
+            </button>
             <button
               type="button"
               onClick={async () => {
@@ -611,6 +806,14 @@ export default function SettingsModal() {
               transition={{ duration: 0.12, ease: "easeOut" }}
               className="flex-1 flex flex-col"
             >
+              {activeTab === "Profile" && (
+                <ProfileTab searchQuery={searchQuery} />
+              )}
+              {activeTab === "Personalize" && (
+                <WallpaperTab searchQuery={searchQuery} />
+              )}
+              {activeTab === "Sound" && <SoundTab searchQuery={searchQuery} />}
+              {activeTab === "Desktop" && <DesktopTab searchQuery={searchQuery} />}
               {activeTab === "Playback" && (
                 <PlaybackTab searchQuery={searchQuery} />
               )}

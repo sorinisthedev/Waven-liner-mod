@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { KawarpEngine } from "../engine/kawarpEngine";
 import { getCoverElement, useCoverElement } from "@/features/covers";
+import { usePersonalizationStore } from "@/features/personalization/store/personalizationStore";
 
 export const KAWARP_RESIZE_SETTLE_MS = 300;
 export const KAWARP_RENDER_SCALE = 0.5;
+export const KAWARP_RENDER_SCALE_PERFORMANCE = 0.3;
+export const KAWARP_MAX_FPS_PERFORMANCE = 30;
 
 interface KawarpWrapperProps {
   src?: string;
@@ -17,6 +20,8 @@ export function KawarpWrapper({ src, onLoad, onError }: KawarpWrapperProps) {
   const engineRef = useRef<KawarpEngine | null>(null);
   const [loaded, setLoaded] = useState(false);
   const coverElement = useCoverElement(src);
+  const performanceMode = usePersonalizationStore((s) => s.performanceMode);
+  const renderScale = performanceMode ? KAWARP_RENDER_SCALE_PERFORMANCE : KAWARP_RENDER_SCALE;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -71,8 +76,8 @@ export function KawarpWrapper({ src, onLoad, onError }: KawarpWrapperProps) {
       surfaceHeight = height;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
-      canvas.width = Math.max(1, Math.round(width * KAWARP_RENDER_SCALE));
-      canvas.height = Math.max(1, Math.round(height * KAWARP_RENDER_SCALE));
+      canvas.width = Math.max(1, Math.round(width * renderScale));
+      canvas.height = Math.max(1, Math.round(height * renderScale));
       engineRef.current?.resize();
     };
 
@@ -96,7 +101,11 @@ export function KawarpWrapper({ src, onLoad, onError }: KawarpWrapperProps) {
       resizeObserver.disconnect();
       window.removeEventListener("resize", scheduleSize);
     };
-  }, []);
+  }, [renderScale]);
+
+  useEffect(() => {
+    engineRef.current?.setMaxFps(performanceMode ? KAWARP_MAX_FPS_PERFORMANCE : 0);
+  }, [performanceMode]);
 
   useEffect(() => {
     const engine = engineRef.current;

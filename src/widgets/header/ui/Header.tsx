@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import WindowControls from "@/features/navigation/ui/WindowControls";
 import logo from "@/assets/logo.svg";
 import { cn } from "@/shared/lib";
+import { SleepTimerChip } from "@/features/sound";
+import { PerformanceModeButton } from "@/features/personalization";
 
 export interface HeaderProps {
   searchOpen?: boolean;
@@ -42,6 +44,8 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(function Header(
       </div>
 
       <div className="flex items-center gap-[8px] mr-[6px] shrink-0">
+        <SleepTimerChip />
+        <PerformanceModeButton />
         <div
           data-no-window-drag
           data-no-tooltip="true"

@@ -6,3 +6,7 @@ export { AboutTab } from "./AboutTab";
 export { OverlayTab } from "./OverlayTab";
 export { DiscordTab } from "./DiscordTab";
 export { YoutubeTab } from "./YoutubeTab";
+export { ProfileTab } from "./ProfileTab";
+export { WallpaperTab } from "./WallpaperTab";
+export { SoundTab } from "./SoundTab";
+export { DesktopTab } from "./DesktopTab";

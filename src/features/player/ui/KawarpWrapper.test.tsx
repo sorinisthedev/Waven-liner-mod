@@ -3,7 +3,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const engine = vi.hoisted(() => ({ resize: vi.fn(), start: vi.fn(), dispose: vi.fn(), loadImage: vi.fn(async () => {}) }));
+const engine = vi.hoisted(() => ({ resize: vi.fn(), start: vi.fn(), setMaxFps: vi.fn(), dispose: vi.fn(), loadImage: vi.fn(async () => {}) }));
 
 vi.mock("../engine/kawarpEngine", () => ({
   KawarpEngine: vi.fn(function KawarpEngine() {

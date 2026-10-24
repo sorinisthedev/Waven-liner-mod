@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer, webFrame } from "electron";
 import type {
   AuthRefreshResult,
   StoredAuthSession,
@@ -179,6 +179,13 @@ export interface LinerElectronApi {
   setOverlayAuthenticated?: (authenticated: boolean) => void;
   discordUpdateState: (state: any) => void;
   discordUpdateSettings: (settings: any) => void;
+  setPerformanceMode?: (enabled: boolean) => void;
+  getDesktopOptions?: () => Promise<{ closeToTray: boolean; openAtLogin: boolean }>;
+  setDesktopOptions?: (
+    patch: Partial<{ closeToTray: boolean; openAtLogin: boolean }>,
+  ) => Promise<{ closeToTray: boolean; openAtLogin: boolean }>;
+  /** drops decoded images and other renderer caches, they reload on demand */
+  trimMemory?: () => void;
   getDiscordStatus: () => Promise<DiscordStatus>;
   mintPoToken: (identifier: string) => Promise<string>;
   youtubeTvSession: () => Promise<YoutubeTvSession>;
@@ -423,6 +430,16 @@ const api: LinerElectronApi = {
   },
   discordUpdateSettings: (settings) => {
     ipcRenderer.send("discord:update-settings", settings);
+  },
+  getDesktopOptions: () => ipcRenderer.invoke("desktop:get-options"),
+  setDesktopOptions: (patch) => ipcRenderer.invoke("desktop:set-options", patch),
+  setPerformanceMode: (enabled) => {
+    ipcRenderer.send("app:set-performance-mode", enabled === true);
+  },
+  trimMemory: () => {
+    try {
+      webFrame.clearCache();
+    } catch {}
   },
   getDiscordStatus: () => ipcRenderer.invoke("discord:get-status"),
   mintPoToken: (identifier) => ipcRenderer.invoke("potoken:mint", identifier),

@@ -1,7 +1,7 @@
 import { memo, useMemo, useState } from "react";
 import { useTranslation } from "@/languages";
 import { useAuthStore } from "@/features/auth/store/authStore";
-import { UserAvatar } from "@/entities/user";
+import { CurrentUserAvatar } from "@/features/personalization";
 import { cn } from "@/shared/lib";
 import {
   SunriseFill,
@@ -9,7 +9,9 @@ import {
   SunsetFill,
   MoonStarsFill,
   PlayFill,
+  Pencil2Line,
 } from "@mingcute/react";
+import { useModalStore } from "@/features/library/store/modalStore";
 
 export type HomeFilterCategory =
   "all" | "mixes" | "charts" | "albums" | "speedDial";
@@ -31,6 +33,7 @@ function HomePageHeader({
 }: HomePageHeaderProps) {
   const { t, locale } = useTranslation();
   const user = useAuthStore((s) => s.user);
+  const openSettingsTab = useModalStore((s) => s.openSettingsTab);
 
   const [currentDate] = useState(() => new Date());
 
@@ -101,9 +104,19 @@ function HomePageHeader({
       <div className="pt-[20px] pb-[8px] px-8 flex flex-col gap-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3.5 min-w-0">
-            <div className="shrink-0" data-no-window-drag>
-              <UserAvatar user={user} size={44} className="!rounded-[10px]" />
-            </div>
+            <button
+              type="button"
+              onClick={() => openSettingsTab("Profile")}
+              title={t("settings.profile.edit_profile") || "Edit profile"}
+              aria-label={t("settings.profile.edit_profile") || "Edit profile"}
+              className="group relative shrink-0 p-0 border-0 bg-transparent cursor-pointer rounded-[10px] transition-transform active:scale-95"
+              data-no-window-drag
+            >
+              <CurrentUserAvatar user={user} size={44} className="!rounded-[10px]" />
+              <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[inherit] bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                <Pencil2Line size={16} />
+              </span>
+            </button>
 
             <div className="flex flex-col gap-0.5 min-w-0">
               <h1 className="text-[26px] font-[700] text-text-primary tracking-[-0.03em] leading-[1.15] m-0 font-sans">

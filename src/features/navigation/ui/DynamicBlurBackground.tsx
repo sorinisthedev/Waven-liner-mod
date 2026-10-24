@@ -1,6 +1,7 @@
 import { memo } from "react";
 import PageCoverBackdrop from "./PageCoverBackdrop";
 import { useActiveBackgroundCover } from "../hooks/useActiveBackgroundCover";
+import { usePersonalizationStore } from "@/features/personalization";
 
 export interface DynamicBlurBackgroundProps {
   isDark?: boolean;
@@ -15,8 +16,9 @@ export function DynamicBlurBackground({
 }: DynamicBlurBackgroundProps) {
   const { effectiveCoverSrc, pageBackdropOptions } =
     useActiveBackgroundCover();
+  const coverBackdrops = usePersonalizationStore((s) => s.coverBackdrops);
 
-  if (!effectiveCoverSrc) return null;
+  if (!effectiveCoverSrc || !coverBackdrops) return null;
 
   return (
     <PageCoverBackdrop

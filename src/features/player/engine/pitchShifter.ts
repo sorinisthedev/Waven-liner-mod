@@ -224,11 +224,125 @@ export interface AudioEffectsParams {
   reverbLevel?: number;
 }
 
+export const EQ_FREQUENCIES = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000] as const;
+
+export interface PostEffectsParams {
+  eqGains: readonly number[];
+  /** dynamics compressor that evens out loud and quiet songs */
+  leveling: boolean;
+  /** cancels centre-panned vocals, keeps the bass */
+  karaoke: boolean;
+}
+
+// karaoke -> eq -> leveling -> transition gain -> analyser -> speakers
+interface PostChain {
+  ctx: AudioContext;
+  input: GainNode;
+  dryGain: GainNode;
+  karaokeGain: GainNode;
+  preamp: GainNode;
+  filters: BiquadFilterNode[];
+  compressor: DynamicsCompressorNode;
+  levelDry: GainNode;
+  levelWet: GainNode;
+  transition: GainNode;
+  analyser: AnalyserNode;
+}
+
+function buildPostChain(ctx: AudioContext): PostChain {
+  const input = ctx.createGain();
+  const dryGain = ctx.createGain();
+  const karaokeGain = ctx.createGain();
+  karaokeGain.gain.value = 0;
+  const preamp = ctx.createGain();
+
+  // vocal cut: L-R on both channels removes what is panned dead centre
+  const splitter = ctx.createChannelSplitter(2);
+  const invertRight = ctx.createGain();
+  invertRight.gain.value = -1;
+  const side = ctx.createGain();
+  side.channelCount = 1;
+  side.channelCountMode = "explicit";
+  const merger = ctx.createChannelMerger(2);
+  input.connect(splitter);
+  splitter.connect(side, 0);
+  splitter.connect(invertRight, 1);
+  invertRight.connect(side);
+  side.connect(merger, 0, 0);
+  side.connect(merger, 0, 1);
+  // bass and kick are centred too, so add the lows back from the original
+  const bassKeep = ctx.createBiquadFilter();
+  bassKeep.type = "lowpass";
+  bassKeep.frequency.value = 160;
+  input.connect(bassKeep);
+  merger.connect(karaokeGain);
+  bassKeep.connect(karaokeGain);
+
+  input.connect(dryGain);
+  dryGain.connect(preamp);
+  karaokeGain.connect(preamp);
+
+  const filters = EQ_FREQUENCIES.map((freq, i) => {
+    const f = ctx.createBiquadFilter();
+    f.type = i === 0 ? "lowshelf" : i === EQ_FREQUENCIES.length - 1 ? "highshelf" : "peaking";
+    f.frequency.value = freq;
+    f.Q.value = 1.1;
+    return f;
+  });
+  preamp.connect(filters[0]);
+  for (let i = 0; i < filters.length - 1; i++) filters[i].connect(filters[i + 1]);
+  const eqOut = filters[filters.length - 1];
+
+  const compressor = ctx.createDynamicsCompressor();
+  compressor.threshold.value = -24;
+  compressor.knee.value = 12;
+  compressor.ratio.value = 4;
+  compressor.attack.value = 0.01;
+  compressor.release.value = 0.25;
+  const levelDry = ctx.createGain();
+  const levelWet = ctx.createGain();
+  levelWet.gain.value = 0;
+  eqOut.connect(levelDry);
+  eqOut.connect(compressor);
+  compressor.connect(levelWet);
+
+  const transition = ctx.createGain();
+  levelDry.connect(transition);
+  levelWet.connect(transition);
+
+  const analyser = ctx.createAnalyser();
+  analyser.fftSize = 256;
+  analyser.smoothingTimeConstant = 0.8;
+  transition.connect(analyser);
+  analyser.connect(ctx.destination);
+
+  return {
+    ctx,
+    input,
+    dryGain,
+    karaokeGain,
+    preamp,
+    filters,
+    compressor,
+    levelDry,
+    levelWet,
+    transition,
+    analyser,
+  };
+}
+
 export class PitchShifterController {
   private context: AudioContext | null = null;
   private sourceNode: MediaElementAudioSourceNode | null = null;
   private graph: AudioEffectsGraph | null = null;
   private isConnected = false;
+  private post: PostChain | null = null;
+  private postParams: PostEffectsParams = {
+    eqGains: EQ_FREQUENCIES.map(() => 0),
+    leveling: false,
+    karaoke: false,
+  };
+  private postWiredGraph: AudioEffectsGraph | null = null;
 
   public attach(audio: HTMLAudioElement): void {
     if (typeof window === "undefined") return;
@@ -401,10 +515,93 @@ export class PitchShifterController {
       this.sourceNode = graph.sourceNode;
       this.graph = graph;
       this.isConnected = true;
+      if (this.post) this.wirePostChain();
     } catch (err) {
       console.error("[AudioEffects] Failed to attach to audio element:", err);
       this.isConnected = false;
     }
+  }
+
+  /** routes playback through the post chain, attaching the web-audio graph if needed */
+  public ensurePostChain(): boolean {
+    if (!this.isConnected) {
+      const win = typeof window !== "undefined" ? (window as any) : null;
+      const audio =
+        win?.__liner_audio ||
+        (typeof document !== "undefined" && document.getElementById("liner-audio"));
+      if (!audio) return false;
+      this.attach(audio);
+      if (!this.isConnected) return false;
+    }
+    this.wirePostChain();
+    this.resumeContext();
+    return Boolean(this.post);
+  }
+
+  public hasPostChain(): boolean {
+    return Boolean(this.post);
+  }
+
+  public setPostEffects(params: PostEffectsParams): void {
+    this.postParams = {
+      eqGains: EQ_FREQUENCIES.map((_, i) => {
+        const g = params.eqGains[i] ?? 0;
+        return Number.isFinite(g) ? Math.max(-12, Math.min(12, g)) : 0;
+      }),
+      leveling: params.leveling,
+      karaoke: params.karaoke,
+    };
+    if (this.post) this.applyPostParams();
+  }
+
+  /** kept for callers that only care about the EQ */
+  public setEqualizer(gainsDb: readonly number[]): void {
+    this.setPostEffects({ ...this.postParams, eqGains: gainsDb });
+    if (gainsDb.some((g) => g !== 0)) this.ensurePostChain();
+  }
+
+  /** 0..1 level used for fading songs in and out */
+  public setTransitionGain(value: number, timeConstant = 0.08): void {
+    if (!this.post) return;
+    const v = Math.max(0, Math.min(1, value));
+    this.post.transition.gain.setTargetAtTime(v, this.post.ctx.currentTime, timeConstant);
+  }
+
+  public getAnalyser(): AnalyserNode | null {
+    return this.post?.analyser ?? null;
+  }
+
+  private wirePostChain(): void {
+    const graph = this.graph;
+    if (!graph) return;
+    if (!this.post || this.post.ctx !== graph.ctx) {
+      this.post = buildPostChain(graph.ctx);
+      this.postWiredGraph = null;
+    }
+    if (this.postWiredGraph !== graph) {
+      try {
+        graph.masterOutputGain.disconnect();
+      } catch {}
+      graph.masterOutputGain.connect(this.post.input);
+      this.postWiredGraph = graph;
+    }
+    this.applyPostParams();
+  }
+
+  private applyPostParams(): void {
+    const post = this.post;
+    if (!post) return;
+    const { eqGains, leveling, karaoke } = this.postParams;
+    const now = post.ctx.currentTime;
+    post.filters.forEach((f, i) => f.gain.setTargetAtTime(eqGains[i], now, 0.03));
+    // pull the level down by the biggest boost so loud presets don't clip
+    const headroomDb = Math.max(0, ...eqGains) * 0.6;
+    post.preamp.gain.setTargetAtTime(Math.pow(10, -headroomDb / 20), now, 0.03);
+    post.dryGain.gain.setTargetAtTime(karaoke ? 0 : 1, now, 0.05);
+    post.karaokeGain.gain.setTargetAtTime(karaoke ? 1 : 0, now, 0.05);
+    post.levelDry.gain.setTargetAtTime(leveling ? 0 : 1, now, 0.05);
+    // makeup gain for what the compressor takes off
+    post.levelWet.gain.setTargetAtTime(leveling ? 1.6 : 0, now, 0.05);
   }
 
   public isAttached(): boolean {

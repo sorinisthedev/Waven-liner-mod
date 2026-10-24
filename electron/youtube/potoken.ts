@@ -4,6 +4,10 @@ import { registerYoutubeWorkerIpc } from "./worker-ipc.js";
 const BOTGUARD_PAGE = "https://www.youtube.com/robots.txt";
 const START_TIMEOUT_MS = 20_000;
 const DEFAULT_REQUEST_TIMEOUT_MS = 20_000;
+// the worker is a whole hidden chromium page, so it is torn down when idle and
+// started again on the next request
+export const POTOKEN_IDLE_MS = 10 * 60_000;
+export const POTOKEN_IDLE_MS_PERFORMANCE = 90_000;
 const INTERPRETER_HOSTS = new Set(["www.google.com", "www.gstatic.com"]);
 
 export type WorkerMethod = "mint" | "tv-session" | "solve-n";
@@ -26,6 +30,8 @@ export class PoTokenService {
   private markReady: (() => void) | null = null;
   private nextId = 1;
   private readonly pending = new Map<number, PendingRequest>();
+  private idleMs = POTOKEN_IDLE_MS;
+  private idleTimer: NodeJS.Timeout | null = null;
 
   constructor(private readonly preloadPath: string) {
     ipcMain.on("potoken:ready", (event) => {
@@ -59,6 +65,7 @@ export class PoTokenService {
     if (!entry) return;
     this.pending.delete(result.id);
     clearTimeout(entry.timer);
+    this.scheduleIdle();
     if (result.error === undefined) entry.resolve(result.value);
     else entry.reject(new Error(result.error || "YouTube worker failed"));
   }
@@ -114,11 +121,28 @@ export class PoTokenService {
     }
   }
 
+  setIdleTimeout(ms: number): void {
+    this.idleMs = Math.max(15_000, ms);
+    this.scheduleIdle();
+  }
+
+  private scheduleIdle(): void {
+    if (this.idleTimer) clearTimeout(this.idleTimer);
+    this.idleTimer = null;
+    if (!this.window || this.pending.size > 0) return;
+    this.idleTimer = setTimeout(() => {
+      this.idleTimer = null;
+      if (this.pending.size === 0) this.destroy();
+    }, this.idleMs);
+  }
+
   async request(
     method: WorkerMethod,
     payload: unknown,
     timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
   ): Promise<unknown> {
+    if (this.idleTimer) clearTimeout(this.idleTimer);
+    this.idleTimer = null;
     await this.start();
     const win = this.window;
     if (!win || win.isDestroyed())
@@ -127,6 +151,7 @@ export class PoTokenService {
     return new Promise<unknown>((resolve, reject) => {
       const timer = setTimeout(() => {
         this.pending.delete(id);
+        this.scheduleIdle();
         reject(new Error(`YouTube worker ${method} timed out`));
       }, timeoutMs);
       this.pending.set(id, { resolve, reject, timer });
@@ -141,6 +166,8 @@ export class PoTokenService {
   }
 
   destroy(): void {
+    if (this.idleTimer) clearTimeout(this.idleTimer);
+    this.idleTimer = null;
     const win = this.window;
     if (win && !win.isDestroyed()) win.destroy();
     if (win) this.reset(win);

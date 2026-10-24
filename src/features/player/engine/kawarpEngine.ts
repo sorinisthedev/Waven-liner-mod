@@ -218,6 +218,9 @@ export class KawarpEngine {
   private warpIntensity = 1.1;
   private blurPasses = 8;
   private animationSpeed = 1.0;
+  /** 0 = follow the display refresh rate */
+  private maxFps = 0;
+  private lastRenderTime = 0;
   private saturation = 1.4;
   private tintColor: [number, number, number] = [0.157, 0.157, 0.235];
   private tintIntensity = 0.15;
@@ -539,6 +542,10 @@ export class KawarpEngine {
     this.animationId = requestAnimationFrame(this.renderLoop);
   }
 
+  public setMaxFps(fps: number) {
+    this.maxFps = Math.max(0, fps);
+  }
+
   public stop() {
     this.isPlaying = false;
     if (this.animationId !== null) {
@@ -556,7 +563,11 @@ export class KawarpEngine {
     const dt = (timestamp - this.lastFrameTime) / 1000;
     this.lastFrameTime = timestamp;
     this.accumulatedTime += dt * this.animationSpeed;
-    this.render(this.accumulatedTime, timestamp);
+    // capped mode skips frames but keeps time flowing so the motion speed is unchanged
+    if (!this.maxFps || timestamp - this.lastRenderTime >= 1000 / this.maxFps - 1) {
+      this.lastRenderTime = timestamp;
+      this.render(this.accumulatedTime, timestamp);
+    }
     this.animationId = requestAnimationFrame(this.renderLoop);
   };
 

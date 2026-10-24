@@ -25,6 +25,10 @@ import WindowControls from "./WindowControls";
 import PageTransition from "./PageTransition";
 import RightDrawer from "./RightDrawer";
 import DynamicBlurBackground from "./DynamicBlurBackground";
+import { WallpaperLayer } from "@/features/personalization";
+import { SoundSync } from "@/features/sound";
+import { ListeningLogSync } from "@/features/stats";
+import { CommandLayer } from "@/features/command";
 import { useGlobalShortcuts } from "../hooks/useGlobalShortcuts";
 import { useDisableButtonFocus } from "../hooks/useDisableButtonFocus";
 import { useWindowState } from "../hooks/useWindowState";
@@ -678,6 +682,10 @@ export default function AppFrame({ children }: AppFrameProps) {
         if (e.currentTarget.scrollTop !== 0) e.currentTarget.scrollTop = 0;
       }}
     >
+      <SoundSync />
+      <ListeningLogSync />
+      <CommandLayer />
+      <WallpaperLayer rounded={!isEdgeToEdge} />
       <DynamicBlurBackground isDark={isDark} />
 
       <AnimatePresence>

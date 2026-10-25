@@ -11,7 +11,7 @@ import { HeartFill, HeartLine } from "@mingcute/react";
 import CoverImage from "@/features/covers/ui/CoverImage";
 import { ScrollableText } from "@/shared/ui/ScrollableText";
 import { useDisableButtonFocus } from "@/features/navigation/hooks/useDisableButtonFocus";
-import { getAuthSession } from "@/shared/api/auth-session";
+import { hasActiveSession } from "@/shared/api/auth-session";
 import type { OverlayAction, OverlayStatePayload } from "../contracts";
 import { useShortcutsStore, matchesShortcut } from "@/features/shortcuts";
 
@@ -42,7 +42,7 @@ export function OverlayPlayer() {
   const lastTrackIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!getAuthSession()) {
+    if (!hasActiveSession()) {
       window.linerElectron?.closeOverlay?.();
       return;
     }

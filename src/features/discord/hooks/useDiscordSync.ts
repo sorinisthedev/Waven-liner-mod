@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePlayerState } from "@/features/player/hooks/usePlayerState";
 import { useCoverSrc } from "@/features/covers";
 import { api, mediaUrl, toMaxQualityAvatarUrl } from "@/shared/api";
-import { getAuthSession } from "@/shared/api/auth-session";
+import { hasActiveSession } from "@/shared/api/auth-session";
 import type { DiscordRpcStatePayload } from "../contracts";
 import { useDiscordSettingsStore } from "../store/discordSettingsStore";
 
@@ -55,8 +55,7 @@ export function useDiscordSync() {
   // Clear Discord presence when logging out
   useEffect(() => {
     const handleAuthChange = () => {
-      const session = getAuthSession();
-      if (!session) {
+      if (!hasActiveSession()) {
         window.linerElectron?.discordUpdateState?.({
           status: "idle",
           track: null,

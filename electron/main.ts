@@ -108,15 +108,39 @@ process.env.APP_ROOT = path.join(__dirname, "..");
 export const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 
-// the app was called "Liner 2.0" before WAVEN; its data folder (login, settings,
-// wallpaper, history) moves over once so nothing is lost on upgrade. this runs
-// before anything else touches userData.
+// tests point the app at a throwaway data folder so they never touch real data
+if (process.env.WAVEN_USER_DATA) app.setPath("userData", process.env.WAVEN_USER_DATA);
+
+// the app was called "Liner 2.0" before WAVEN. electron creates the WAVEN data
+// folder before this code runs, so instead of renaming, copy the parts that hold
+// the login, settings, wallpaper and library over once. anything already in the
+// WAVEN folder is kept in a backup copy first. runs before storage is opened.
 try {
   const current = app.getPath("userData");
   const legacy = path.join(app.getPath("appData"), "Liner 2.0");
-  if (!fs.existsSync(current) && fs.existsSync(legacy)) fs.renameSync(legacy, current);
+  const marker = path.join(current, ".migrated-from-liner2");
+  if (!process.env.WAVEN_USER_DATA && fs.existsSync(legacy) && !fs.existsSync(marker)) {
+    const carried = ["Local Storage", "IndexedDB", "Session Storage", "auth", "overlay-settings.json", "desktop-options.json"];
+    fs.mkdirSync(current, { recursive: true });
+    if (carried.some((name) => fs.existsSync(path.join(current, name)))) {
+      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const backup = path.join(app.getPath("appData"), `WAVEN backup ${stamp}`);
+      for (const name of carried) {
+        const from = path.join(current, name);
+        if (fs.existsSync(from)) fs.cpSync(from, path.join(backup, name), { recursive: true });
+      }
+    }
+    for (const name of carried) {
+      const from = path.join(legacy, name);
+      if (!fs.existsSync(from)) continue;
+      const to = path.join(current, name);
+      fs.rmSync(to, { recursive: true, force: true });
+      fs.cpSync(from, to, { recursive: true });
+    }
+    fs.writeFileSync(marker, new Date().toISOString());
+  }
 } catch (err) {
-  console.warn("[WAVEN] could not move the old Liner 2.0 data folder:", err);
+  console.warn("[WAVEN] could not copy the old Liner 2.0 data:", err);
 }
 
 // Liner 2.0 is a local build: upstream's OTA bundles and GitHub releases would

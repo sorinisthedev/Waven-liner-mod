@@ -26,6 +26,7 @@ import {
 import { usePageBackdrop } from "@/shared/lib";
 import likesCover from "@/assets/likes-cover.svg";
 import { PinPlaylistButton } from "@/features/pins";
+import { Pic2Line } from "@mingcute/react";
 import { PlaylistIconEditor, PlaylistIconOverlay } from "@/features/playlist-icons";
 import { useAuthStore } from "@/features/auth";
 import { userDisplayName } from "@/entities/user";
@@ -134,7 +135,7 @@ function LibraryPlaylistContent() {
   const { t } = useTranslation();
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [iconEditorOpen, setIconEditorOpen] = useState(false);
+  const [iconEditorOpen, setIconEditorOpen] = useState(() => searchParams.get("icon") === "1");
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const reorderTracks = useReorderPlaylistTracks();
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -701,6 +702,19 @@ function LibraryPlaylistContent() {
                         onSubmit={handleSearchSubmit}
                         className={HERO_GLASS_CLASS}
                       />
+                      {decodedId && (
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          onClick={() => setIconEditorOpen(true)}
+                          aria-label={t("playlist_icons.change")}
+                          title={t("playlist_icons.change")}
+                          data-testid="playlist-icon-button"
+                          className={`!h-[38px] !w-[38px] !rounded-full ${HERO_GLASS_BUTTON_CLASS}`}
+                        >
+                          <Pic2Line size={17} />
+                        </Button>
+                      )}
                       {decodedId && (
                         <PinPlaylistButton
                           pin={{

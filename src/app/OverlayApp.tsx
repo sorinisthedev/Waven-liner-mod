@@ -1,11 +1,11 @@
 import { ThemeProvider } from "next-themes";
 import GlobalTooltip from "@/shared/ui/GlobalTooltip";
 import { OverlayPlayer } from "@/features/overlay/ui/OverlayPlayer";
-import { getAuthSession } from "@/shared/api/auth-session";
+import { hasActiveSession } from "@/shared/api/auth-session";
 import "./globals.css";
 
 export default function OverlayApp() {
-  if (!getAuthSession()) {
+  if (!hasActiveSession()) {
     window.linerElectron?.closeOverlay?.();
     return null;
   }

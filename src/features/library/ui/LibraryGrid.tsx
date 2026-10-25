@@ -22,6 +22,7 @@ import {
   Search2Line,
   AddLine,
   Search3Fill,
+  Pic2Line,
 } from "@mingcute/react";
 
 interface LibraryGridProps {
@@ -63,6 +64,7 @@ function LoadingSkeletonList() {
 
 function useItemMenuItems(item: LibraryItemViewModel): DropdownMenuItem[] {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return useMemo(() => {
     if (item.source) return [];
     const entityType =
@@ -71,7 +73,18 @@ function useItemMenuItems(item: LibraryItemViewModel): DropdownMenuItem[] {
         : item.kind === "album"
           ? "album"
           : "playlist";
+    const ownPlaylist = item.kind === "playlist" && item.href.startsWith("/library/playlist");
     return [
+      ...(ownPlaylist
+        ? [
+            {
+              id: "change-icon",
+              label: t("playlist_icons.change"),
+              icon: <Pic2Line size={15} />,
+              onClick: () => navigate(`${item.href}&icon=1`),
+            },
+          ]
+        : []),
       {
         id: "remove-from-library",
         label: t("common.remove_from_library"),
@@ -89,7 +102,7 @@ function useItemMenuItems(item: LibraryItemViewModel): DropdownMenuItem[] {
         },
       },
     ];
-  }, [item.id, item.title, item.imageUrl, item.subtitle, item.kind, item.isOwned, item.source, item.href, t]);
+  }, [item.id, item.title, item.imageUrl, item.subtitle, item.kind, item.isOwned, item.source, item.href, t, navigate]);
 }
 
 function LibraryItemCard({ item }: { item: LibraryItemViewModel }) {

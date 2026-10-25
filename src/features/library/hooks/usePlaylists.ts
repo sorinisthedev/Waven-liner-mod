@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { api, getAuthSession, mediaUrl, toClientTrack, type ApiUserPlaylistItem } from "@/shared/api";
+import { api, hasActiveSession, mediaUrl, toClientTrack, type ApiUserPlaylistItem } from "@/shared/api";
 import { queryCache } from "@/shared/cache/queryCache";
 import type { Track } from "@/shared/types";
 
@@ -88,8 +88,7 @@ const SERVER_SNAPSHOT = { data: EMPTY, error: undefined as unknown, isLoading: t
 
 function load(force = false): Promise<void> {
   if (request) return request;
-  const session = getAuthSession();
-  if (!session?.accessToken) {
+  if (!hasActiveSession()) {
     cache = EMPTY;
     loaded = false;
     emit();
@@ -159,8 +158,7 @@ function load(force = false): Promise<void> {
 
 if (typeof window !== "undefined") {
   const handleRefresh = () => {
-    const session = getAuthSession();
-    if (!session?.accessToken) {
+    if (!hasActiveSession()) {
       cache = EMPTY;
       loaded = false;
       emit();

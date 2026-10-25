@@ -7,7 +7,7 @@ import {
   useUnlikeTrack,
 } from "@/features/library/hooks";
 import { useCoverSrc } from "@/features/covers";
-import { getAuthSession } from "@/shared/api";
+import { hasActiveSession } from "@/shared/api";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { showToast } from "@/shared/ui/Toast";
 import type {
@@ -18,7 +18,7 @@ import { useOverlaySettingsStore } from "../store/overlaySettingsStore";
 
 export function useOverlaySync() {
   const authStatus = useAuthStore((s) => s.status);
-  const isAuthenticated = authStatus === "authenticated" && Boolean(getAuthSession());
+  const isAuthenticated = authStatus === "authenticated" && hasActiveSession();
   const player = usePlayerState();
   const currentTrack = player.currentTrack;
   const effectiveCover = useCoverSrc(currentTrack?.coverUrl);
@@ -50,8 +50,7 @@ export function useOverlaySync() {
   // Hide overlay when user logs out or session is cleared
   useEffect(() => {
     const handleAuthChange = () => {
-      const session = getAuthSession();
-      const authed = Boolean(session);
+      const authed = hasActiveSession();
       window.linerElectron?.setOverlayAuthenticated?.(authed);
       if (!authed) {
         window.linerElectron?.closeOverlay?.();

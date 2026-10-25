@@ -4,6 +4,7 @@ import { signApiRequest, syncServerTime } from "./requestSigner";
 export type { AuthTokens, AuthUser };
 
 import { getApiBaseUrl } from "./baseUrl";
+import { LOCAL_MODE } from "@/shared/local/mode";
  
 const STORAGE_KEY = "liner_auth_session";
 const DEAD_REFRESH_CODES = new Set(["INVALID_REFRESH_TOKEN", "REFRESH_SESSION_EXPIRED"]);
@@ -310,4 +311,12 @@ export async function clearAuthSession(): Promise<void> {
     const logoutDate = response.headers?.get?.("date");
     if (logoutDate) syncServerTime(logoutDate);
   }
+}
+
+/**
+ * True when there is a library to read: always in local mode (the profile
+ * lives on this PC), otherwise only with a Liner session.
+ */
+export function hasActiveSession(): boolean {
+  return LOCAL_MODE || Boolean(getAuthSession()?.accessToken);
 }

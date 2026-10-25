@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from "react";
-import { api, getAuthSession, toClientTrack } from "@/shared/api";
+import { api, hasActiveSession, toClientTrack } from "@/shared/api";
 import type { Track } from "@/shared/types";
 
 type LikedData = { tracks: Track[]; total: number };
@@ -55,8 +55,7 @@ const SERVER_SNAPSHOT = { data: EMPTY, isLoading: true };
 
 function load(force = false): Promise<void> {
   if (request) return request;
-  const session = getAuthSession();
-  if (!session?.accessToken) {
+  if (!hasActiveSession()) {
     cache = EMPTY;
     loaded = false;
     emit(false);
@@ -113,8 +112,7 @@ export function applyOptimisticUnlike(trackId: string): () => void {
 
 if (typeof window !== "undefined") {
   const handleRefresh = () => {
-    const session = getAuthSession();
-    if (!session?.accessToken) {
+    if (!hasActiveSession()) {
       cache = EMPTY;
       loaded = false;
       optimisticOverrides.clear();

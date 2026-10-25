@@ -112,6 +112,14 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 // replace it with stock Liner, so both update channels stay off.
 const REMOTE_UPDATES_ENABLED = false;
 
+// second lock on top of the switch: even if some path tried, upstream's update
+// feeds are refused at the network layer
+const BLOCKED_UPDATE_URLS = [
+  "*://updates.tryliner.fun/*",
+  "*://github.com/tryliner/desktop/releases/*",
+  "*://api.github.com/repos/tryliner/desktop/releases*",
+];
+
 process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? path.join(process.env.APP_ROOT, "public")
   : RENDERER_DIST;
@@ -770,6 +778,13 @@ if (!gotTheLock) {
         }
       },
     );
+
+    if (!REMOTE_UPDATES_ENABLED) {
+      session.defaultSession.webRequest.onBeforeRequest(
+        { urls: BLOCKED_UPDATE_URLS },
+        (_details, callback) => callback({ cancel: true }),
+      );
+    }
 
     session.defaultSession.webRequest.onBeforeSendHeaders(
       {

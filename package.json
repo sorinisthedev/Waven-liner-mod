@@ -35,13 +35,7 @@
     "productName": "Liner 2.0",
     "executableName": "liner2",
     "artifactName": "${productName}-${version}-${arch}.${ext}",
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "tryliner",
-        "repo": "desktop"
-      }
-    ],
+    "publish": null,
     "directories": {
       "output": "release"
     },

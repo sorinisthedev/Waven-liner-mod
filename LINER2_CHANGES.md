@@ -43,3 +43,5 @@ npx vite --config .claude/vite.renderer.config.ts
 - **Pinned playlists** in the sidebar (pin button on playlist pages).
 - **Desktop tab**: close to tray, start with Windows (packaged builds only), settings backup/restore.
 - **Updates disabled** and the app renamed **Liner 2.0** (`com.liner2.app`, `liner2.exe`) so it can't be replaced by upstream Liner.
+- **Playlist icons**: click a playlist's cover to pick an emoji + color or upload an image. Stored locally (`liner_playlist_icons_v1`, included in backups) and shown on library cards/rows, the playlist page and sidebar pins.
+- **Upstream fully cut off**: no `publish` feed in the build (no `app-update.yml`), upstream update URLs are refused at the network layer, and the `tryliner/desktop` git remote is removed.

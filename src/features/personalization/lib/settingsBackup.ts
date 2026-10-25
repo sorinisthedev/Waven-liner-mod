@@ -8,6 +8,7 @@ export const BACKUP_KEYS = [
   "liner_alarm_v1",
   "liner_custom_theme_v1",
   "liner_pinned_playlists_v1",
+  "liner_playlist_icons_v1",
   "liner_listening_log_v1",
   "liner_discord_settings_v1",
   "liner_overlay_settings_v1",

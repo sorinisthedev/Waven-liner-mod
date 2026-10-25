@@ -16,6 +16,7 @@ import {
   useYoutubeLibraryItems,
 } from "../hooks";
 import likesCover from "@/assets/likes-cover.svg";
+import { PlaylistIconOverlay } from "@/features/playlist-icons";
 import { useTranslation } from "@/languages";
 import { useModalStore } from "../store/modalStore";
 import { useImportStore } from "../store/importStore";
@@ -81,6 +82,7 @@ function LikesPlaylistCard({
               draggable={false}
               className="h-full w-full object-cover select-none"
             />
+            <PlaylistIconOverlay playlistId="likes" />
           </div>
 
           <div className="min-w-0 flex flex-col gap-[2px]">
@@ -125,6 +127,7 @@ function LikesPlaylistCard({
           draggable={false}
           className="h-full w-full object-cover select-none"
         />
+        <PlaylistIconOverlay playlistId="likes" />
       </div>
       <div className="flex flex-col gap-[4px]">
         <span className="truncate text-[14px] font-[500] text-text-primary">

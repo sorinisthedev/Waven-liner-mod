@@ -26,6 +26,7 @@ import {
 import { usePageBackdrop } from "@/shared/lib";
 import likesCover from "@/assets/likes-cover.svg";
 import { PinPlaylistButton } from "@/features/pins";
+import { PlaylistIconEditor, PlaylistIconOverlay } from "@/features/playlist-icons";
 import { useAuthStore } from "@/features/auth";
 import { userDisplayName } from "@/entities/user";
 import {
@@ -133,6 +134,7 @@ function LibraryPlaylistContent() {
   const { t } = useTranslation();
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [iconEditorOpen, setIconEditorOpen] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const reorderTracks = useReorderPlaylistTracks();
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -458,8 +460,16 @@ function LibraryPlaylistContent() {
               style={{ willChange: "scroll-position" }}
             >
               <div className="pl-[16px] pr-[12px] pt-[8px]" data-no-window-drag>
+                {decodedId && (
+                  <PlaylistIconEditor
+                    open={iconEditorOpen}
+                    onOpenChange={setIconEditorOpen}
+                    playlistId={decodedId}
+                    title={viewData.title}
+                  />
+                )}
                 <EntityHero
-                  cover={(() => {
+                  cover={<>{(() => {
                     const urls =
                       viewData.coverUrls ??
                       (viewData.coverUrl ? [viewData.coverUrl] : []);
@@ -516,6 +526,21 @@ function LibraryPlaylistContent() {
                       </div>
                     );
                   })()}
+                  {decodedId && <PlaylistIconOverlay playlistId={decodedId} />}
+                  {decodedId && (
+                    <button
+                      type="button"
+                      onClick={() => setIconEditorOpen(true)}
+                      data-testid="playlist-icon-edit"
+                      aria-label={t("playlist_icons.change")}
+                      className="group/icon absolute inset-0 z-[2] flex items-end justify-center border-0 bg-transparent p-0 pb-[10px] cursor-pointer"
+                    >
+                      <span className="rounded-full bg-black/60 px-[10px] py-[4px] text-[12px] font-[500] text-white opacity-0 transition-opacity group-hover/icon:opacity-100">
+                        {t("playlist_icons.change")}
+                      </span>
+                    </button>
+                  )}
+                  </>}
                   title={
                     <h1
                       ref={titleRef}

@@ -4,6 +4,7 @@ import AlbumCard from "@/features/collection/ui/AlbumCard";
 import PlaylistCard from "./PlaylistCard";
 import SourceBadge from "./SourceBadge";
 import CoverImage from "@/features/covers/ui/CoverImage";
+import { PlaylistIconOverlay } from "@/features/playlist-icons";
 import DropdownMenu, { type DropdownMenuItem } from "@/shared/ui/DropdownMenu";
 import type {
   LibraryItemViewModel,
@@ -118,6 +119,7 @@ function LibraryItemCard({ item }: { item: LibraryItemViewModel }) {
       href={item.href}
       badge={<SourceBadge source={item.source} />}
       menuItems={menuItems}
+      iconId={item.kind === "playlist" ? item.id : undefined}
     />
   );
 }
@@ -170,6 +172,7 @@ function LibraryItemRow({ item }: { item: LibraryItemViewModel }) {
               <PlaylistFill size={20} />
             </div>
           )}
+          {item.kind === "playlist" && <PlaylistIconOverlay playlistId={item.id} />}
         </div>
 
         <div className="min-w-0 flex flex-col gap-[2px]">

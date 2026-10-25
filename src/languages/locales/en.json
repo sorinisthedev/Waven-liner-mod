@@ -1277,5 +1277,16 @@
   "pins": {
     "pin": "Pin to sidebar",
     "unpin": "Unpin from sidebar"
+  },
+  "playlist_icons": {
+    "title": "Playlist icon",
+    "change": "Change icon",
+    "upload": "Upload image",
+    "emoji": "Or pick an emoji",
+    "local_note": "Icons are saved on this computer and only you see them.",
+    "save": "Save icon",
+    "remove": "Remove icon",
+    "saved": "Playlist icon updated",
+    "failed": "Couldn't use that image"
   }
 }

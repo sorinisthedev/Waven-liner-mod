@@ -5,6 +5,7 @@ import DropdownMenu from "@/shared/ui/DropdownMenu";
 import type { DropdownMenuItem } from "@/shared/ui/DropdownMenu";
 import type { PlaylistVariant } from "../types";
 import CoverImage from "@/features/covers/ui/CoverImage";
+import { PlaylistIconOverlay } from "@/features/playlist-icons";
 
 export interface PlaylistCardProps {
   title: string;
@@ -17,6 +18,8 @@ export interface PlaylistCardProps {
   badge?: ReactNode;
   className?: string;
   menuItems?: DropdownMenuItem[];
+  /** playlist id whose custom icon (if any) replaces the artwork */
+  iconId?: string;
 }
 
 function CoverCollage({ urls, title }: { urls: string[]; title: string }) {
@@ -74,6 +77,7 @@ function PlaylistCard({
   badge,
   className = "",
   menuItems,
+  iconId,
 }: PlaylistCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<{
@@ -135,6 +139,7 @@ function PlaylistCard({
             />
           </div>
         )}
+        <PlaylistIconOverlay playlistId={iconId} />
       </div>
       <div
         className={`flex flex-col ${

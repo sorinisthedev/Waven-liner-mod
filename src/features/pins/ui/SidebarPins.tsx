@@ -4,6 +4,7 @@ import { Tooltip } from "@/shared/ui";
 import { CoverImage } from "@/features/covers";
 import likesCover from "@/assets/likes-cover.svg";
 import { usePinnedStore } from "../store/pinnedStore";
+import { PlaylistIconOverlay } from "@/features/playlist-icons";
 
 /** pinned playlists as small covers under the sidebar navigation */
 export function SidebarPins() {
@@ -37,6 +38,7 @@ export function SidebarPins() {
                   <PlaylistFill size={16} />
                 </span>
               )}
+              <PlaylistIconOverlay playlistId={pin.id} emojiScale={0.6} />
             </Link>
           </Tooltip>
         );

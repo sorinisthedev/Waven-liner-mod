@@ -49,6 +49,7 @@ export const WAVEN_DISCORD_APPLICATION_ID = "1563767847719800865";
 const WAVEN_ICON_URL =
   "https://raw.githubusercontent.com/sorinisthedev/Waven-liner-mod/main/.github/assets/waven-icon.png";
 const WAVEN_RELEASES_URL = "https://github.com/sorinisthedev/Waven-liner-mod/releases/latest";
+const WAVEN_LISTEN_URL = "https://sorinisthedev.github.io/Waven-liner-mod/open/";
 
 function builtInApplicationId(): string {
   return (
@@ -59,10 +60,14 @@ function builtInApplicationId(): string {
   );
 }
 
-/** youtube music link for a youtube-backed track, nothing for local files */
-function youtubeMusicUrl(trackId: string): string | undefined {
+/** listen page for a youtube-backed track (opens it in WAVEN), none for local files */
+function listenUrl(trackId: string, title: string, artist: string): string | undefined {
   const id = trackId.replace(/^yt:/, "");
-  return /^[a-zA-Z0-9_-]{11}$/.test(id) ? `https://music.youtube.com/watch?v=${id}` : undefined;
+  if (!/^[a-zA-Z0-9_-]{11}$/.test(id)) return undefined;
+  const params = new URLSearchParams({ type: "track", id, t: title.slice(0, 80), a: artist.slice(0, 60) });
+  const url = `${WAVEN_LISTEN_URL}?${params}`;
+  // discord rejects button urls over 512 characters
+  return url.length <= 512 ? url : `${WAVEN_LISTEN_URL}?type=track&id=${id}`;
 }
 
 const DEFAULT_SETTINGS: DiscordRpcSettings = {
@@ -397,16 +402,17 @@ export class DiscordRpcManager {
         activity.largeImageKey = artistImage;
       }
 
-      // buttons: open the song on YouTube Music, and get WAVEN (Discord allows 2)
+      // buttons like other Liner mods: listen to this song in WAVEN, and download
+      // WAVEN from GitHub (Discord allows 2)
       const buttons: Array<{ label: string; url: string }> = [];
 
-      const songUrl = track.id ? youtubeMusicUrl(track.id) : undefined;
+      const songUrl = track.id ? listenUrl(track.id, title, artist) : undefined;
       if (this.settings.showButton && songUrl) {
-        buttons.push({ label: "Play on YouTube Music", url: songUrl });
+        buttons.push({ label: "Listen on WAVEN", url: songUrl });
       }
 
       if (this.settings.showDownloadButton) {
-        buttons.push({ label: "Get WAVEN", url: WAVEN_RELEASES_URL });
+        buttons.push({ label: "Download WAVEN", url: WAVEN_RELEASES_URL });
       }
 
       if (buttons.length > 0) {

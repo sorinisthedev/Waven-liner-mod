@@ -617,12 +617,12 @@
         "description": "Keep status visible on Discord with a paused indicator when music is paused."
       },
       "show_button": {
-        "title": "'Play on YouTube Music' button",
-        "description": "Add a button that opens the song you're playing on YouTube Music."
+        "title": "'Listen on WAVEN' button",
+        "description": "Add a button that lets friends open the song you're playing in WAVEN."
       },
       "show_download_button": {
-        "title": "'Get WAVEN' button",
-        "description": "Add a button linking to the WAVEN download page."
+        "title": "'Download WAVEN' button",
+        "description": "Add a button that takes friends to the WAVEN download page on GitHub."
       },
       "status": {
         "connected": "Connected to Discord ({user})",

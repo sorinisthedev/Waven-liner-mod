@@ -17,7 +17,7 @@ export const BACKUP_KEYS = [
 ] as const;
 
 interface BackupFile {
-  app: "liner2";
+  app: "waven" | "liner2";
   version: 1;
   exportedAt: string;
   storage: Record<string, string>;
@@ -42,7 +42,7 @@ export async function createBackup(): Promise<Blob> {
     if (value !== null) storage[key] = value;
   }
   const file: BackupFile = {
-    app: "liner2",
+    app: "waven",
     version: 1,
     exportedAt: new Date().toISOString(),
     storage,
@@ -74,8 +74,9 @@ export function downloadBlob(blob: Blob, filename: string) {
 /** writes a backup back into storage; the caller reloads the app afterwards */
 export async function restoreBackup(text: string): Promise<void> {
   const parsed = JSON.parse(text) as Partial<BackupFile>;
-  if (parsed.app !== "liner2" || parsed.version !== 1 || !parsed.storage) {
-    throw new Error("not a Liner 2.0 backup");
+  // backups made before the rename say "liner2", both are fine
+  if ((parsed.app !== "waven" && parsed.app !== "liner2") || parsed.version !== 1 || !parsed.storage) {
+    throw new Error("not a WAVEN backup");
   }
   const allowed = new Set<string>(BACKUP_KEYS);
   for (const [key, value] of Object.entries(parsed.storage)) {

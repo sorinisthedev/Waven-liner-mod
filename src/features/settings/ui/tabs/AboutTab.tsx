@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Refresh1Line } from "@mingcute/react";
 import { useTranslation, getTranslationsForAllLocales } from "@/languages";
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/waven-logo.png";
 import { AboutTabLinks } from "./AboutTabLinks";
 import { AboutBackdrop } from "./AboutBackdrop";
 import { useAboutAppVersion } from "./useAboutAppVersion";

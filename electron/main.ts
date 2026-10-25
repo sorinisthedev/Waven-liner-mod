@@ -108,6 +108,17 @@ process.env.APP_ROOT = path.join(__dirname, "..");
 export const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 
+// the app was called "Liner 2.0" before WAVEN; its data folder (login, settings,
+// wallpaper, history) moves over once so nothing is lost on upgrade. this runs
+// before anything else touches userData.
+try {
+  const current = app.getPath("userData");
+  const legacy = path.join(app.getPath("appData"), "Liner 2.0");
+  if (!fs.existsSync(current) && fs.existsSync(legacy)) fs.renameSync(legacy, current);
+} catch (err) {
+  console.warn("[WAVEN] could not move the old Liner 2.0 data folder:", err);
+}
+
 // Liner 2.0 is a local build: upstream's OTA bundles and GitHub releases would
 // replace it with stock Liner, so both update channels stay off.
 const REMOTE_UPDATES_ENABLED = false;
@@ -255,7 +266,7 @@ const MIN_WINDOW_HEIGHT = 705;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    title: "Liner",
+    title: "WAVEN",
     icon: path.join(process.env.VITE_PUBLIC!, "icon.png"),
     width: DEFAULT_WINDOW_WIDTH,
     height: DEFAULT_WINDOW_HEIGHT,

@@ -43,7 +43,7 @@
   },
   "common": {
     "app": {
-      "name": "Liner",
+      "name": "WAVEN",
       "description": "Plus de ce que vous aimez",
       "version": "Version 0.1.0"
     },
@@ -244,7 +244,7 @@
     "sign_in_to_account": "Connectez-vous à votre compte",
     "auth_title_login": "Votre musique, à votre façon",
     "auth_subtitle_login": "Connectez-vous et reprenez là où vous vous étiez arrêté.",
-    "auth_title_register": "Rejoindre Liner",
+    "auth_title_register": "Rejoindre WAVEN",
     "auth_subtitle_register": "Créez un compte et commencez à construire votre bibliothèque personnelle.",
     "profile_setup_title": "Configurez votre profil",
     "profile_setup_subtitle": "Choisissez votre identifiant unique et votre nom affiché.",
@@ -464,9 +464,9 @@
     "shortcuts": {
       "description": "Personnalisez les raccourcis clavier globaux et ceux du lecteur.",
       "global_section": "Raccourcis globaux (système)",
-      "global_desc": "Fonctionnent depuis n'importe quelle application, même quand Liner est réduit ou n'a pas le focus.",
+      "global_desc": "Fonctionnent depuis n'importe quelle application, même quand WAVEN est réduit ou n'a pas le focus.",
       "main_app_section": "Application principale",
-      "main_app_desc": "Actifs quand la fenêtre principale de Liner est ouverte et a le focus.",
+      "main_app_desc": "Actifs quand la fenêtre principale de WAVEN est ouverte et a le focus.",
       "miniplayer_section": "Mode mini-lecteur",
       "miniplayer_desc": "Actifs quand le mini-lecteur en overlay a le focus.",
       "toggle_overlay": "Afficher/masquer le mini-lecteur",
@@ -540,14 +540,13 @@
       },
       "auto_show_on_minimize": {
         "title": "Afficher à la réduction",
-        "description": "Affiche automatiquement l'overlay quand Liner est réduit."
+        "description": "Affiche automatiquement l'overlay quand WAVEN est réduit."
       },
       "always_on_top": {
         "title": "Toujours au premier plan",
         "description": "Garde l'overlay au-dessus des autres fenêtres."
       }
     },
-
     "audio_data": {
       "description": "Qualité du streaming, cache hors ligne et diagnostic de connexion."
     },
@@ -619,8 +618,8 @@
       "title": "Cache et stockage",
       "description": "Répartition du stockage, statistiques du cache local et fichiers multimédias.",
       "usage_title": "Utilisation du stockage",
-      "device_usage": "Liner utilise actuellement {size} de stockage local.",
-      "device_usage_raw": "Liner utilise actuellement {size} de stockage local.",
+      "device_usage": "WAVEN utilise actuellement {size} de stockage local.",
+      "device_usage_raw": "WAVEN utilise actuellement {size} de stockage local.",
       "audio_cache_limit": "Taille maximale du cache",
       "audio_cache_limit_desc": "Les fichiers et médias les plus anciens sont supprimés automatiquement quand le cache est plein",
       "cache_limit": "Taille maximale du cache",
@@ -636,7 +635,7 @@
       "empty_storage": "Le cache est tout propre !",
       "cloud_disclaimer": "Tous les médias, pochettes et titres restent dans le cloud et seront retéléchargés automatiquement à la lecture.",
       "clearing_title": "Nettoyage du cache...",
-      "clearing_subtitle": "Gardez cette fenêtre ouverte pendant que Liner nettoie votre cache.",
+      "clearing_subtitle": "Gardez cette fenêtre ouverte pendant que WAVEN nettoie votre cache.",
       "cleared_title": "Stockage libéré",
       "cleared_subtitle": "Votre cache a été vidé. Les nouveaux médias seront diffusés et mis en cache automatiquement.",
       "done_button": "Terminé",
@@ -685,7 +684,7 @@
       "title": "Profil",
       "signed_in_as": "Connecté en tant que",
       "not_signed_in": "Aucune session reconnue n'est actuellement connectée.",
-      "sign_in": "Se connecter à Liner",
+      "sign_in": "Se connecter à WAVEN",
       "sign_out": "Se déconnecter",
       "sign_out_confirm": "Voulez-vous vraiment vous déconnecter ?",
       "edit_profile": "Modifier le profil",
@@ -738,7 +737,7 @@
       "badge_private": "Privé"
     },
     "about": {
-      "liner": "Liner",
+      "liner": "WAVEN",
       "telegram": "Chaîne",
       "support": "Assistance",
       "github": "GitHub",
@@ -845,7 +844,7 @@
   },
   "error_screen": {
     "title": "Un problème est survenu",
-    "subtitle": "Une erreur inattendue s'est produite dans Liner. Vous pouvez recharger l'application ou réessayer.",
+    "subtitle": "Une erreur inattendue s'est produite dans WAVEN. Vous pouvez recharger l'application ou réessayer.",
     "reload": "Recharger l'application",
     "try_again": "Réessayer",
     "go_home": "Aller à l'accueil",
@@ -872,13 +871,13 @@
   },
   "connectivity": {
     "wall_title": "Échec de la connexion",
-    "wall_subtitle": "Liner n'arrive pas à joindre ses serveurs. Votre musique et votre bibliothèque sont en sécurité.",
+    "wall_subtitle": "WAVEN n'arrive pas à joindre ses serveurs. Votre musique et votre bibliothèque sont en sécurité.",
     "wall_title_server": "Les serveurs de Liner rencontrent des difficultés",
     "wall_subtitle_server": "Votre connexion fonctionne, mais le serveur a répondu par une erreur. Votre musique et votre bibliothèque sont en sécurité, réessayez dans quelques minutes.",
     "steps_title": "Solutions rapides à essayer",
     "step_net": "Vérifiez que le Wi-Fi ou le câble est connecté et que les pages s'ouvrent dans un navigateur.",
     "step_vpn": "Mettez en pause le VPN, le proxy ou les filtres DNS pendant une minute : ils bloquent souvent l'application.",
-    "step_firewall": "Autorisez Liner dans le pare-feu et les protections réseau de l'antivirus.",
+    "step_firewall": "Autorisez WAVEN dans le pare-feu et les protections réseau de l'antivirus.",
     "step_router": "Redémarrez le routeur, puis cliquez sur Réessayer ci-dessous.",
     "retry": "Réessayer",
     "retrying": "Vérification…",
@@ -903,13 +902,13 @@
   },
   "updater": {
     "modal_title": "Nouvelle mise à jour disponible",
-    "modal_desc": "Une nouvelle version de Liner (v{version}) est prête à être téléchargée.",
+    "modal_desc": "Une nouvelle version de WAVEN (v{version}) est prête à être téléchargée.",
     "view_changelog": "Nouveautés",
     "skip_button": "Ignorer",
     "update_button": "Mettre à jour",
     "downloading_title": "Téléchargement de la mise à jour…",
     "downloaded_title": "Mise à jour téléchargée",
-    "downloaded_desc": "Redémarrez Liner pour installer la version {version}.",
+    "downloaded_desc": "Redémarrez WAVEN pour installer la version {version}.",
     "install_button": "Installer",
     "error_title": "Échec de la mise à jour"
   },

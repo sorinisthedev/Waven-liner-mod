@@ -234,22 +234,40 @@ export function OverlayPlayer() {
           scale: isVisible ? 1 : 0.92,
         }}
         transition={OVERLAY_CARD_TRANSITION}
-        className="relative flex w-full shrink-0 flex-col overflow-hidden rounded-[10px] bg-[#0d0d10]"
+        className="relative flex w-full shrink-0 flex-col overflow-hidden rounded-[12px] bg-[#0b0b0e] ring-1 ring-inset ring-white/[0.08]"
         style={{
           height: "48px",
           willChange: "transform, opacity",
           transformOrigin: "center center",
         }}
       >
-        {/* Background Progress Fill - Straight rectangular without rounding */}
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-[1] rounded-none"
-          style={{
-            backgroundColor: "rgba(255, 255, 255, 0.08)",
-            width: `${progressRatio * 100}%`,
-            transition: "width 200ms cubic-bezier(0.22, 1, 0.36, 1)",
-          }}
-        />
+        {/* blurred artwork wash behind the card */}
+        {(state.track?.coverUrl || state.track?.cover) && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+            <CoverImage
+              key={`wash-${state.track.coverUrl || state.track.cover}`}
+              src={state.track.coverUrl || state.track.cover || ""}
+              alt=""
+              fill
+              sizes="120px"
+              unoptimized
+              draggable={false}
+              className="scale-150 object-cover opacity-45 blur-2xl saturate-150"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/55 to-black/70" />
+          </div>
+        )}
+
+        {/* thin progress line along the bottom edge */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[2px] bg-white/[0.08]">
+          <div
+            className="h-full rounded-r-full bg-white/85 shadow-[0_0_6px_rgba(255,255,255,0.5)]"
+            style={{
+              width: `${progressRatio * 100}%`,
+              transition: "width 200ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
+          />
+        </div>
 
         {/* Content Row */}
         <div className="relative z-[2] flex h-full w-full items-center justify-between px-2.5">
@@ -259,7 +277,7 @@ export function OverlayPlayer() {
             onMouseEnter={() => setIsInfoHovered(true)}
             onMouseLeave={() => setIsInfoHovered(false)}
           >
-            <div className="relative h-[32px] w-[32px] shrink-0 overflow-hidden rounded-[12px] bg-[#16161a]">
+            <div className="relative h-[32px] w-[32px] shrink-0 overflow-hidden rounded-[7px] bg-[#16161a] shadow-[0_2px_8px_rgba(0,0,0,0.45)]">
               {state.track?.coverUrl || state.track?.cover ? (
                 <CoverImage
                   key={state.track.coverUrl || state.track.cover}
@@ -270,7 +288,7 @@ export function OverlayPlayer() {
                   priority
                   unoptimized
                   draggable={false}
-                  className="rounded-[12px] object-cover pointer-events-none select-none"
+                  className="rounded-[7px] object-cover pointer-events-none select-none"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-[11px] text-white/30 select-none">
@@ -283,13 +301,13 @@ export function OverlayPlayer() {
               <ScrollableText
                 text={state.track?.title || "No track playing"}
                 isParentHovered={isInfoHovered}
-                className="text-[13px] font-normal leading-[16px] text-white tracking-tight"
+                className="text-[13px] font-semibold leading-[16px] text-white tracking-tight"
                 style={{ fontFamily: "var(--font-inter), sans-serif" }}
               />
               <ScrollableText
                 text={state.track?.artist || ""}
                 isParentHovered={isInfoHovered}
-                className="mt-[1px] text-[11px] font-light leading-[14px] text-white/50"
+                className="mt-[1px] text-[11px] font-normal leading-[14px] text-white/60"
                 style={{ fontFamily: "var(--font-inter), sans-serif" }}
               />
             </div>
@@ -297,7 +315,7 @@ export function OverlayPlayer() {
 
           {/* Right: Like Button + Playback Controls (Previous, Play/Pause, Next) */}
           <div
-            className="flex items-center gap-0.5 shrink-0 pl-1"
+            className="flex items-center gap-1 shrink-0 pl-1"
             style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -312,10 +330,10 @@ export function OverlayPlayer() {
                 e.stopPropagation();
                 sendAction({ type: "like" });
               }}
-              className={`flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-lg border-0 bg-transparent transition-colors outline-none cursor-pointer active:scale-90 ${
+              className={`flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded-full border-0 bg-transparent transition-colors outline-none cursor-pointer hover:bg-white/10 active:scale-90 ${
                 state.isLiked
                   ? "text-[#ff3b5c]"
-                  : "text-white/40 hover:text-white"
+                  : "text-white/55 hover:text-white"
               }`}
               aria-label={state.isLiked ? "Unlike" : "Like"}
             >
@@ -337,7 +355,7 @@ export function OverlayPlayer() {
                 e.stopPropagation();
                 sendAction({ type: "prev" });
               }}
-              className="flex h-[26px] w-[26px] items-center justify-center rounded-lg border-0 bg-transparent text-white/60 hover:text-white active:scale-90 transition-all outline-none cursor-pointer"
+              className="flex h-[28px] w-[28px] items-center justify-center rounded-full border-0 bg-transparent text-white/75 hover:bg-white/10 hover:text-white active:scale-90 transition-all outline-none cursor-pointer"
               aria-label="Previous"
             >
               <SkipPrevious size={16} weight="Bold" />
@@ -354,7 +372,7 @@ export function OverlayPlayer() {
                 e.stopPropagation();
                 sendAction({ type: "togglePlay" });
               }}
-              className="inline-flex h-[28px] w-[28px] items-center justify-center rounded-full bg-white text-black shadow transition-all duration-150 ease-out hover:scale-105 active:scale-95 border-none cursor-pointer"
+              className="inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-white text-black shadow-[0_2px_10px_rgba(0,0,0,0.4)] transition-all duration-150 ease-out hover:scale-105 active:scale-95 border-none cursor-pointer"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               <span
@@ -380,7 +398,7 @@ export function OverlayPlayer() {
                 e.stopPropagation();
                 sendAction({ type: "next" });
               }}
-              className="flex h-[26px] w-[26px] items-center justify-center rounded-lg border-0 bg-transparent text-white/60 hover:text-white active:scale-90 transition-all outline-none cursor-pointer"
+              className="flex h-[28px] w-[28px] items-center justify-center rounded-full border-0 bg-transparent text-white/75 hover:bg-white/10 hover:text-white active:scale-90 transition-all outline-none cursor-pointer"
               aria-label="Next"
             >
               <SkipNext size={16} weight="Bold" />

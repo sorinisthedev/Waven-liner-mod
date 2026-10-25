@@ -71,12 +71,12 @@ export default function StatsPage() {
                 await downloadShareCard({
                   stats,
                   rangeLabel,
-                  userName: userDisplayName(user) ?? "Liner",
+                  userName: userDisplayName(user) ?? "WAVEN",
                   labels: {
                     minutes: t("stats.minutes_listened"),
                     topSongs: t("stats.top_songs"),
                     topArtists: t("stats.top_artists"),
-                    footer: "Liner 2.0",
+                    footer: "WAVEN",
                   },
                 });
                 showToast(t("stats.card_saved"), "success");

@@ -120,7 +120,7 @@ export function ProfileTab({ searchQuery }: { searchQuery?: string }) {
                 className="truncate text-text-primary text-[17px] font-[600] leading-tight"
                 style={font}
               >
-                {userDisplayName(user) ?? "Liner"}
+                {userDisplayName(user) ?? "WAVEN"}
               </span>
               <span className="truncate text-text-tertiary text-[12.5px]" style={font}>
                 {dragging

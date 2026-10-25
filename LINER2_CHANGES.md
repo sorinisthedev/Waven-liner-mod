@@ -1,4 +1,4 @@
-# Liner 2.0 — customization additions
+# WAVEN (formerly Liner 2.0) — changes from Liner
 
 Changes on top of upstream `tryliner/desktop` (v0.2.10, commit `30f319d`).
 
@@ -45,3 +45,5 @@ npx vite --config .claude/vite.renderer.config.ts
 - **Updates disabled** and the app renamed **Liner 2.0** (`com.liner2.app`, `liner2.exe`) so it can't be replaced by upstream Liner.
 - **Playlist icons**: click a playlist's cover to pick an emoji + color or upload an image. Stored locally (`liner_playlist_icons_v1`, included in backups) and shown on library cards/rows, the playlist page and sidebar pins.
 - **Upstream fully cut off**: no `publish` feed in the build (no `app-update.yml`), upstream update URLs are refused at the network layer, and the `tryliner/desktop` git remote is removed.
+- **Renamed to WAVEN** with the wave logo (`branding/`, generated icons in `build/` and `public/`, `src/assets/waven-logo.png`). The appId stays `com.liner2.app`, so the installer upgrades an existing Liner 2.0 install, and the old `%APPDATA%/Liner 2.0` data folder is moved to `%APPDATA%/WAVEN` on first launch. Text about Liner's service (account, servers, Discord buttons, licence) still says Liner.
+- **Player bar and overlay redesign**: thin progress line, cover-colour wash, times beside the transport, larger play button, tinted active toggles; overlay gets a blurred-cover glass card and a bottom progress line.

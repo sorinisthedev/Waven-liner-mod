@@ -81,7 +81,7 @@ export async function downloadShareCard(opts: {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `liner-wrapped-${new Date().toISOString().slice(0, 10)}.png`;
+  a.download = `waven-wrapped-${new Date().toISOString().slice(0, 10)}.png`;
   document.body.appendChild(a);
   a.click();
   a.remove();

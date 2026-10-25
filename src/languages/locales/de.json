@@ -43,7 +43,7 @@
   },
   "common": {
     "app": {
-      "name": "Liner",
+      "name": "WAVEN",
       "description": "Mehr von dem, was du magst",
       "version": "Version 0.1.0"
     },
@@ -101,7 +101,7 @@
     "import_playlist_description": "Importiere eine bereits bestehende Playlist von Spotify oder YouTube.",
     "paste_link_placeholder": "Link einfügen…",
     "magic_link": "Direktlink",
-    "magic_link_description": "Füge einen beliebigen Musiklink ein – zu einem Titel, Album, einer Playlist oder einem Künstler. Liner öffnet den Inhalt automatisch oder fügt ihn für dich hinzu.",
+    "magic_link_description": "Füge einen beliebigen Musiklink ein – zu einem Titel, Album, einer Playlist oder einem Künstler. WAVEN öffnet den Inhalt automatisch oder fügt ihn für dich hinzu.",
     "streaming_link_placeholder": "https://soundcloud.com/whi...",
     "streaming_link": "Musiklink",
     "import_soundcloud_likes": "SoundCloud-Likes importieren",
@@ -242,7 +242,7 @@
     "sign_in_to_account": "Melde dich bei deinem Konto an",
     "auth_title_login": "Deine Musik, auf deine Art",
     "auth_subtitle_login": "Melde dich an und hör da weiter, wo du aufgehört hast.",
-    "auth_title_register": "Werde Teil von Liner",
+    "auth_title_register": "Werde Teil von WAVEN",
     "auth_subtitle_register": "Erstelle ein Konto und baue deine persönliche Mediathek auf.",
     "profile_setup_title": "Richte dein Profil ein",
     "profile_setup_subtitle": "Wähle deinen eindeutigen Benutzernamen und deinen Anzeigenamen.",
@@ -359,7 +359,7 @@
     "repeat": "Wiederholung",
     "previous": "Vorher",
     "open_player": "Player öffnen",
-    "next":"Weiter",
+    "next": "Weiter",
     "lyrics_upgraded": "Songtext verbessert!",
     "playing_from": "Wiedergabe von",
     "autoplay_radio": "Autoplay-Radio",
@@ -483,7 +483,7 @@
       },
       "auto_show_on_minimize": {
         "title": "Beim Minimieren automatisch anzeigen",
-        "description": "Zeigt das Overlay automatisch an, wenn Liner minimiert wird."
+        "description": "Zeigt das Overlay automatisch an, wenn WAVEN minimiert wird."
       },
       "always_on_top": {
         "title": "Immer im Vordergrund",
@@ -561,8 +561,8 @@
       "title": "Cache & Speicher",
       "description": "Speicheraufschlüsselung, Analyse des lokalen Caches und Mediendateien.",
       "usage_title": "Speichernutzung",
-      "device_usage": "Liner belegt derzeit {size} lokalen Speicher.",
-      "device_usage_raw": "Liner belegt derzeit {size} lokalen Speicher.",
+      "device_usage": "WAVEN belegt derzeit {size} lokalen Speicher.",
+      "device_usage_raw": "WAVEN belegt derzeit {size} lokalen Speicher.",
       "audio_cache_limit": "Größenlimit für den Cache",
       "audio_cache_limit_desc": "Ältere Dateien und Medien werden bei vollem Cache automatisch entfernt",
       "cache_limit": "Größenlimit für den Cache",
@@ -578,7 +578,7 @@
       "empty_storage": "Dein Cache ist leer.",
       "cloud_disclaimer": "Alle Medien, Cover und Titel bleiben in der Cloud und werden bei der Wiedergabe nahtlos neu geladen.",
       "clearing_title": "Cache wird geleert…",
-      "clearing_subtitle": "Bitte lass dieses Fenster geöffnet, während Liner deinen Cache leert.",
+      "clearing_subtitle": "Bitte lass dieses Fenster geöffnet, während WAVEN deinen Cache leert.",
       "cleared_title": "Speicher geleert",
       "cleared_subtitle": "Dein Cache wurde bereinigt. Neue Medien werden automatisch gestreamt und zwischengespeichert.",
       "done_button": "Fertig",
@@ -627,7 +627,7 @@
       "title": "Profil",
       "signed_in_as": "Angemeldet als",
       "not_signed_in": "Du bist derzeit nicht angemeldet.",
-      "sign_in": "Bei Liner anmelden",
+      "sign_in": "Bei WAVEN anmelden",
       "sign_out": "Abmelden",
       "sign_out_confirm": "Möchtest du dich wirklich abmelden?",
       "edit_profile": "Profil bearbeiten",
@@ -680,7 +680,7 @@
       "badge_private": "Privat"
     },
     "about": {
-      "liner": "Liner",
+      "liner": "WAVEN",
       "telegram": "Kanal",
       "support": "Support",
       "github": "GitHub",
@@ -788,7 +788,7 @@
   },
   "error_screen": {
     "title": "Etwas ist schiefgelaufen",
-    "subtitle": "In Liner ist ein unerwarteter Fehler aufgetreten. Du kannst die App neu laden oder es erneut versuchen.",
+    "subtitle": "In WAVEN ist ein unerwarteter Fehler aufgetreten. Du kannst die App neu laden oder es erneut versuchen.",
     "reload": "App neu laden",
     "try_again": "Erneut versuchen",
     "go_home": "Zur Startseite",
@@ -815,11 +815,11 @@
   },
   "connectivity": {
     "wall_title": "Verbindung fehlgeschlagen",
-    "wall_subtitle": "Liner kann seine Server nicht erreichen. Deine Musik und Mediathek sind sicher.",
+    "wall_subtitle": "WAVEN kann seine Server nicht erreichen. Deine Musik und Mediathek sind sicher.",
     "steps_title": "Schnelle Lösungen zum Ausprobieren",
     "step_net": "Prüfe, ob WLAN oder Kabel verbunden sind und ob sich Webseiten im Browser öffnen lassen.",
     "step_vpn": "Deaktiviere VPN, Proxy oder DNS-Filter für eine Minute – sie blockieren die App oft.",
-    "step_firewall": "Erlaube Liner in der Firewall und in den Netzwerkschutzfunktionen deines Virenschutzes.",
+    "step_firewall": "Erlaube WAVEN in der Firewall und in den Netzwerkschutzfunktionen deines Virenschutzes.",
     "step_router": "Starte den Router neu und klicke dann unten auf „Erneut versuchen“.",
     "retry": "Erneut versuchen",
     "retrying": "Wird geprüft…",
@@ -844,13 +844,13 @@
   },
   "updater": {
     "modal_title": "Neues Update verfügbar",
-    "modal_desc": "Eine neue Version von Liner (v{version}) steht zum Download bereit.",
+    "modal_desc": "Eine neue Version von WAVEN (v{version}) steht zum Download bereit.",
     "view_changelog": "Änderungsprotokoll",
     "skip_button": "Überspringen",
     "update_button": "Aktualisieren",
     "downloading_title": "Update wird heruntergeladen…",
     "downloaded_title": "Update heruntergeladen",
-    "downloaded_desc": "Starte Liner neu, um Version {version} zu installieren.",
+    "downloaded_desc": "Starte WAVEN neu, um Version {version} zu installieren.",
     "install_button": "Installieren",
     "error_title": "Update fehlgeschlagen"
   },

@@ -1,7 +1,7 @@
 import Select from "@/shared/ui/Select";
 import { useTranslation, LOCALE_OPTIONS } from "@/languages";
-import logo from "@/assets/logo.svg";
-import loginMark from "@/assets/login-mark.svg";
+import logo from "@/assets/waven-logo.png";
+import loginMark from "@/assets/waven-logo.png";
 
 export interface LoginBrandPanelProps {
   title: string;
@@ -17,24 +17,24 @@ export function LoginBrandPanel({ title, subtitle }: LoginBrandPanelProps) {
         src={loginMark}
         alt=""
         aria-hidden="true"
-        width={435}
-        height={598}
+        width={981}
+        height={365}
         draggable={false}
-        className="theme-logo pointer-events-none absolute inset-x-0 top-0 h-auto w-full select-none mask-b-from-40% mask-b-to-100%"
+        className="theme-logo pointer-events-none absolute -left-[12%] top-[18%] h-auto w-[124%] max-w-none rotate-[-8deg] select-none opacity-[0.07] mask-b-from-40% mask-b-to-100%"
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] bg-linear-to-t from-transparent to-transparent dark:from-black/25" />
 
       <div className="relative flex items-center gap-[10px]">
         <img
           src={logo}
-          alt="Liner"
-          width={45}
-          height={35}
+          alt="WAVEN"
+          width={60}
+          height={22}
           draggable={false}
           className="theme-logo h-[22px] w-auto object-contain select-none"
         />
         <span className="text-[18px] font-[650] tracking-[-0.03em] text-text-primary">
-          Liner
+          WAVEN
         </span>
       </div>
 

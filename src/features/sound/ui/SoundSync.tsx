@@ -134,7 +134,7 @@ export function SoundSync() {
       const message = tRef.current("settings.sound.alarm_fired");
       try {
         if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-          new Notification("Liner", { body: message, silent: false });
+          new Notification("WAVEN", { body: message, silent: false });
         }
       } catch {}
       if (!player.currentTrack) {

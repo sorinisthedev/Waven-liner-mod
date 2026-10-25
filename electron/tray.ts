@@ -110,16 +110,16 @@ export class DesktopIntegration {
       this.tray = null;
       return;
     }
-    this.tray.setToolTip("Liner 2.0");
+    this.tray.setToolTip("WAVEN");
     this.tray.setContextMenu(
       Menu.buildFromTemplate([
-        { label: "Show Liner", click: () => this.showWindow() },
+        { label: "Show WAVEN", click: () => this.showWindow() },
         { type: "separator" },
         { label: "Play / Pause", click: () => this.deps.sendAction("togglePlay") },
         { label: "Next", click: () => this.deps.sendAction("next") },
         { label: "Previous", click: () => this.deps.sendAction("prev") },
         { type: "separator" },
-        { label: "Quit Liner", click: () => this.deps.quit() },
+        { label: "Quit WAVEN", click: () => this.deps.quit() },
       ]),
     );
     this.tray.on("click", () => {

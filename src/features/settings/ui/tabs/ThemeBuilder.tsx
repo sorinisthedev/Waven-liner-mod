@@ -60,7 +60,7 @@ export function ThemeBuilder({ searchQuery }: { searchQuery?: string }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${theme.name.replace(/[^\w\- ]+/g, "").trim() || "theme"}.liner-theme.json`;
+    a.download = `${theme.name.replace(/[^\w\- ]+/g, "").trim() || "theme"}.waven-theme.json`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 5_000);
     toast.success(t("settings.theme_builder.exported"));

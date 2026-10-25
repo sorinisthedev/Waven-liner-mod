@@ -216,7 +216,9 @@ function MiniPlayer({
       document.documentElement.getAttribute("data-theme") === "light";
   const miniPlayerStyle = usePlayerStore((state) => state.miniPlayerStyle);
   const usesRoundedStyle = !embedded && miniPlayerStyle === "rounded";
-  const usesBackgroundProgress = true;
+  // the docked bar gets a thin progress line instead of a full-height fill,
+  // which read as a hard-edged block
+  const usesBackgroundProgress = !embedded;
   const hasPageBackdrop = usePageBackdropStore((s) => Boolean(s.coverUrl));
   const [accentColor, setAccentColor] = useState(
     isLight ? "rgba(0, 0, 0, 0.06)" : "rgba(255, 255, 255, 0.12)",
@@ -366,6 +368,15 @@ function MiniPlayer({
 
   const isPlaying = player.status === "playing";
   const isLoading = player.status === "loading";
+  const formatClock = (ms: number) => {
+    const total = Math.max(0, Math.floor(ms / 1000));
+    return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+  };
+  // cover colour as a translucent wash: rgb(r, g, b) becomes rgba(r, g, b, alpha)
+  const accentWash = (alpha: number) =>
+    accentColorSolid.startsWith("rgb(")
+      ? accentColorSolid.replace("rgb(", "rgba(").replace(")", `, ${alpha})`)
+      : `rgba(255, 255, 255, ${alpha * 0.4})`;
   const trackTitle = player.currentTrack?.title ?? t("player.nothing_playing");
   const trackArtists = player.currentTrack?.artists ?? t("player.choose_track");
 
@@ -430,12 +441,14 @@ function MiniPlayer({
   // progress fill sliding underneath never changes it. Values are the hover tint
   // pre-composited over the toolbox on bg-primary (dark #0a0a0a, light #f5f5f7).
   // The toolbox pill itself is the opaque bg-toolbox equivalent for the same reason.
-  const activeToggleClass = hasPageBackdrop
-    ? "!bg-black/[0.08] dark:!bg-white/[0.14] !text-text-primary"
-    : "!bg-[#dfdfe1] dark:!bg-[#292929] !text-text-primary";
+  const activeToggleClass = embedded
+    ? "!bg-accent-primary/15 !text-accent-primary"
+    : hasPageBackdrop
+      ? "!bg-black/[0.08] dark:!bg-white/[0.14] !text-text-primary"
+      : "!bg-[#dfdfe1] dark:!bg-[#292929] !text-text-primary";
 
   const iconButtonClass =
-    "inline-flex h-[30px] w-[30px] items-center justify-center rounded-md text-text-secondary transition-colors duration-150 hover:bg-black/[0.05] dark:hover:bg-white/[0.09] hover:text-text-primary active:scale-[0.96] border-none bg-transparent cursor-pointer";
+    "inline-flex h-[32px] w-[32px] items-center justify-center rounded-full text-text-secondary transition-colors duration-150 hover:bg-black/[0.05] dark:hover:bg-white/[0.09] hover:text-text-primary active:scale-[0.96] border-none bg-transparent cursor-pointer";
 
   const clearVolumeHoverTimer = useCallback(() => {
     if (volumeHoverCloseTimerRef.current) {
@@ -701,6 +714,35 @@ function MiniPlayer({
           />
         )}
 
+        {embedded && (
+          <>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-0 transition-[background] duration-700"
+              style={{
+                background: `linear-gradient(90deg, ${accentWash(isLight ? 0.16 : 0.22)} 0%, ${accentWash(isLight ? 0.06 : 0.08)} 45%, transparent 75%)`,
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className="group/progress absolute inset-x-0 top-0 z-20 h-[10px]"
+            >
+              <div className="absolute inset-x-0 top-0 h-[3px] bg-black/[0.06] transition-[height] duration-150 group-hover/progress:h-[5px] dark:bg-white/[0.08]">
+                <div
+                  className="h-full rounded-r-full"
+                  style={{
+                    width: `${activeProgress * 100}%`,
+                    background: isLight ? "var(--text-primary)" : accentColorSolid,
+                    boxShadow: isLight ? undefined : `0 0 10px ${accentWash(0.6)}`,
+                    transition:
+                      scrubRatio !== null ? "none" : "width 200ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
         {embedded ? null : (
           <div
             className={`absolute z-30 prevent-seek ${
@@ -740,12 +782,12 @@ function MiniPlayer({
               : "grid-cols-[286px_minmax(0,1fr)]"
           } ${!usesRoundedStyle && !embedded ? "pb-[4px]" : ""}`}
         >
-          <div className="flex h-full items-center gap-[16px] px-[18px] pt-[1px] pointer-events-none cursor-default">
+          <div className="flex h-full items-center gap-[14px] px-[16px] pt-[1px] pointer-events-none cursor-default">
             <div
               role="button"
               tabIndex={0}
               aria-label="Open player"
-              className={`relative h-[38px] w-[38px] shrink-0 overflow-hidden rounded-[8px] bg-bg-elevated cursor-pointer pointer-events-auto prevent-seek ${
+              className={`relative h-[42px] w-[42px] shrink-0 overflow-hidden rounded-[9px] bg-bg-elevated cursor-pointer pointer-events-auto prevent-seek shadow-[0_4px_14px_rgba(0,0,0,0.28)] transition-transform duration-150 hover:scale-[1.04] ${
                 coverUrl && !isCoverLoaded ? "animate-pulse" : ""
               }`}
               onClick={onFullscreenOpen}
@@ -755,19 +797,19 @@ function MiniPlayer({
                 key={coverUrl}
                 src={coverUrl}
                 alt="Track artwork"
-                width={38}
-                height={38}
+                width={42}
+                height={42}
                 priority
                 draggable={false}
                 onLoad={(e) => {
                   extractAccentColor(e.currentTarget as HTMLImageElement);
                 }}
-                className="h-[38px] w-[38px] object-cover rounded-[8px]"
+                className="h-[42px] w-[42px] object-cover rounded-[9px]"
               />
             </div>
             <div className="flex min-w-0 flex-col pointer-events-none">
               <p
-                className="m-0 truncate text-[16px] font-[400] text-text-primary flex items-center gap-[6px] pointer-events-none"
+                className="m-0 truncate text-[15px] font-[600] text-text-primary flex items-center gap-[6px] pointer-events-none"
                 style={{
                   fontFamily: "var(--font-inter), sans-serif",
                   lineHeight: "18px",
@@ -825,7 +867,15 @@ function MiniPlayer({
               onClick={handleLikeToggle}
               style={{ cursor: "pointer" }}
             >
-              {isLiked ? <HeartFill size={20} /> : <HeartLine size={20} />}
+              <motion.span
+                key={isLiked ? "liked" : "not-liked"}
+                initial={isLiked ? { scale: 0.6 } : false}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 16 }}
+                className="flex"
+              >
+                {isLiked ? <HeartFill size={19} /> : <HeartLine size={19} />}
+              </motion.span>
             </button>
           </div>
 
@@ -835,10 +885,12 @@ function MiniPlayer({
             }`}
           >
             <div
-              className={`ml-auto flex items-center gap-[2px] rounded-lg p-[3px] pointer-events-auto prevent-seek cursor-default ${
-                hasPageBackdrop
-                  ? "bg-black/[0.04] dark:bg-white/[0.06]"
-                  : "bg-[#ebebed] dark:bg-[#141414]"
+              className={`ml-auto flex items-center gap-[2px] rounded-full p-[3px] pointer-events-auto prevent-seek cursor-default ${
+                embedded
+                  ? "bg-transparent"
+                  : hasPageBackdrop
+                    ? "bg-black/[0.04] dark:bg-white/[0.06]"
+                    : "bg-[#ebebed] dark:bg-[#141414]"
               }`}
               onPointerDown={(e) => e.stopPropagation()}
             >
@@ -984,9 +1036,14 @@ function MiniPlayer({
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div
-            className="pointer-events-auto flex items-center gap-[8px] prevent-seek cursor-default"
+            className="pointer-events-auto flex items-center gap-[10px] prevent-seek cursor-default"
             onPointerDown={(e) => e.stopPropagation()}
           >
+            {embedded && (
+              <span className="w-[40px] text-right text-[11.5px] tabular-nums text-text-tertiary" aria-hidden="true">
+                {formatClock(activeProgress * durationMs)}
+              </span>
+            )}
             <button
               type="button"
               aria-label="Previous track"
@@ -1002,7 +1059,7 @@ function MiniPlayer({
             <button
               type="button"
               aria-label={isPlaying ? "Pause" : "Play"}
-              className="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-btn-primary-bg text-btn-primary-text transition-all duration-150 ease-out hover:scale-105 active:scale-[0.96] border-none cursor-pointer shadow-sm"
+              className="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-btn-primary-bg text-btn-primary-text transition-all duration-150 ease-out hover:scale-105 active:scale-[0.96] border-none cursor-pointer shadow-[0_4px_14px_rgba(0,0,0,0.25)]"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={() => {
                 void playerEngine.togglePlayPause();
@@ -1046,6 +1103,11 @@ function MiniPlayer({
             >
               <SkipNext size={18} weight="Bold" />
             </button>
+            {embedded && (
+              <span className="w-[40px] text-[11.5px] tabular-nums text-text-tertiary" aria-hidden="true">
+                {formatClock(durationMs)}
+              </span>
+            )}
           </div>
         </div>
       </div>

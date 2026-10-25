@@ -43,7 +43,7 @@
   },
   "common": {
     "app": {
-      "name": "Liner",
+      "name": "WAVEN",
       "description": "Más de lo que te gusta",
       "version": "Versión 0.1.0"
     },
@@ -244,7 +244,7 @@
     "sign_in_to_account": "Inicia sesión en tu cuenta",
     "auth_title_login": "Tu música, a tu manera",
     "auth_subtitle_login": "Inicia sesión y continúa justo donde lo dejaste.",
-    "auth_title_register": "Únete a Liner",
+    "auth_title_register": "Únete a WAVEN",
     "auth_subtitle_register": "Crea una cuenta y empieza a construir tu biblioteca personal.",
     "profile_setup_title": "Configura tu perfil",
     "profile_setup_subtitle": "Elige tu nombre de usuario único y nombre visible.",
@@ -486,7 +486,7 @@
       },
       "auto_show_on_minimize": {
         "title": "Mostrar automáticamente al minimizar",
-        "description": "Muestra automáticamente el reproductor flotante cuando Liner se minimiza."
+        "description": "Muestra automáticamente el reproductor flotante cuando WAVEN se minimiza."
       },
       "always_on_top": {
         "title": "Siempre encima",
@@ -614,8 +614,8 @@
       "title": "Caché y Almacenamiento",
       "description": "Desglose de almacenamiento, análisis de caché local y archivos multimedia.",
       "usage_title": "Uso de almacenamiento",
-      "device_usage": "Liner está utilizando actualmente {size} de almacenamiento local.",
-      "device_usage_raw": "Liner está utilizando actualmente {size} de almacenamiento local.",
+      "device_usage": "WAVEN está utilizando actualmente {size} de almacenamiento local.",
+      "device_usage_raw": "WAVEN está utilizando actualmente {size} de almacenamiento local.",
       "audio_cache_limit": "Límite de tamaño de caché",
       "audio_cache_limit_desc": "Los archivos antiguos se eliminan automáticamente cuando se alcanza el límite",
       "cache_limit": "Límite de tamaño de caché",
@@ -631,7 +631,7 @@
       "empty_storage": "¡La caché está completamente limpia!",
       "cloud_disclaimer": "Toda la música, carátulas y canciones permanecen en la nube y se volverán a descargar sin problemas al reproducirlas.",
       "clearing_title": "Borrando caché...",
-      "clearing_subtitle": "Por favor, mantén esta ventana abierta mientras Liner limpia tu caché.",
+      "clearing_subtitle": "Por favor, mantén esta ventana abierta mientras WAVEN limpia tu caché.",
       "cleared_title": "Almacenamiento limpiado",
       "cleared_subtitle": "Tu caché ha sido limpiada con éxito. Los nuevos archivos se reproducirán y cachearán automáticamente.",
       "done_button": "Listo",
@@ -680,7 +680,7 @@
       "title": "Perfil",
       "signed_in_as": "Sesión iniciada como",
       "not_signed_in": "No hay una sesión activa reconocida.",
-      "sign_in": "Iniciar sesión en Liner",
+      "sign_in": "Iniciar sesión en WAVEN",
       "sign_out": "Cerrar sesión",
       "sign_out_confirm": "¿Seguro que quieres cerrar sesión?",
       "edit_profile": "Editar perfil",
@@ -733,7 +733,7 @@
       "badge_private": "Privado"
     },
     "about": {
-      "liner": "Liner",
+      "liner": "WAVEN",
       "telegram": "Canal",
       "support": "Soporte",
       "github": "GitHub",
@@ -774,9 +774,9 @@
     "shortcuts": {
       "description": "Personaliza los atajos de teclado globales del sistema y del reproductor.",
       "global_section": "Atajos globales (en todo el sistema)",
-      "global_desc": "Funcionan desde cualquier aplicación de tu equipo, incluso con Liner minimizado o sin foco.",
+      "global_desc": "Funcionan desde cualquier aplicación de tu equipo, incluso con WAVEN minimizado o sin foco.",
       "main_app_section": "Aplicación principal",
-      "main_app_desc": "Activos cuando la ventana principal de Liner está abierta y enfocada.",
+      "main_app_desc": "Activos cuando la ventana principal de WAVEN está abierta y enfocada.",
       "miniplayer_section": "Modo miniplayer",
       "miniplayer_desc": "Activos cuando el miniplayer de escritorio está enfocado.",
       "toggle_overlay": "Mostrar u ocultar la superposición del miniplayer",
@@ -897,7 +897,7 @@
   },
   "error_screen": {
     "title": "Algo salió mal",
-    "subtitle": "Ocurrió un error inesperado en Liner. Puedes recargar la aplicación o volver a intentarlo.",
+    "subtitle": "Ocurrió un error inesperado en WAVEN. Puedes recargar la aplicación o volver a intentarlo.",
     "reload": "Recargar aplicación",
     "try_again": "Reintentar",
     "go_home": "Ir a inicio",
@@ -924,11 +924,11 @@
   },
   "connectivity": {
     "wall_title": "Error de conexión",
-    "wall_subtitle": "Liner no puede comunicarse con sus servidores. Tu música y biblioteca están seguras.",
+    "wall_subtitle": "WAVEN no puede comunicarse con sus servidores. Tu música y biblioteca están seguras.",
     "steps_title": "Soluciones rápidas que puedes probar",
     "step_net": "Comprueba que la conexión Wi-Fi o cable esté conectada y que puedas abrir páginas web.",
     "step_vpn": "Pausa temporalmente VPN, proxies o filtros DNS (a menudo bloquean la app).",
-    "step_firewall": "Permite el acceso de Liner a través del cortafuegos y el antivirus.",
+    "step_firewall": "Permite el acceso de WAVEN a través del cortafuegos y el antivirus.",
     "step_router": "Reinicia el router y pulsa Reintentar abajo.",
     "retry": "Reintentar",
     "retrying": "Comprobando…",
@@ -955,13 +955,13 @@
   },
   "updater": {
     "modal_title": "Nueva actualización disponible",
-    "modal_desc": "Una nueva versión de Liner (v{version}) está lista para descargar.",
+    "modal_desc": "Una nueva versión de WAVEN (v{version}) está lista para descargar.",
     "view_changelog": "Registro de cambios",
     "skip_button": "Omitir",
     "update_button": "Actualizar",
     "downloading_title": "Descargando actualización…",
     "downloaded_title": "Actualización descargada",
-    "downloaded_desc": "Reinicia Liner para instalar la versión {version}.",
+    "downloaded_desc": "Reinicia WAVEN para instalar la versión {version}.",
     "install_button": "Instalar",
     "error_title": "Error en la actualización"
   },

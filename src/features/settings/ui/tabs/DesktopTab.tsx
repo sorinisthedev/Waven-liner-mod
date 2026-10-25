@@ -94,7 +94,7 @@ export function DesktopTab({ searchQuery }: { searchQuery?: string }) {
                   setBusy(true);
                   try {
                     const blob = await createBackup();
-                    downloadBlob(blob, `liner2-settings-${new Date().toISOString().slice(0, 10)}.json`);
+                    downloadBlob(blob, `waven-settings-${new Date().toISOString().slice(0, 10)}.json`);
                     toast.success(t("settings.desktop.backup_saved"));
                   } catch {
                     toast.error(t("settings.desktop.backup_failed"));

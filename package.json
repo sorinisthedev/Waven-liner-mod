@@ -3,13 +3,13 @@
   "version": "0.2.10",
   "type": "module",
   "private": true,
-  "description": "Liner Music Player",
-  "productName": "Liner 2.0",
+  "description": "WAVEN Music Player",
+  "productName": "WAVEN",
   "author": {
     "name": "hkamori",
     "email": "dev@tryliner.fun"
   },
-  "desktopName": "liner",
+  "desktopName": "waven",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
@@ -32,9 +32,9 @@
   },
   "build": {
     "appId": "com.liner2.app",
-    "productName": "Liner 2.0",
-    "executableName": "liner2",
-    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "productName": "WAVEN",
+    "executableName": "waven",
+    "artifactName": "WAVEN-${version}-${arch}.${ext}",
     "publish": null,
     "directories": {
       "output": "release"
@@ -53,9 +53,9 @@
       "native/snap-preview/build/Release/snap_preview.node"
     ],
     "linux": {
-      "executableName": "liner",
+      "executableName": "waven",
       "syncDesktopName": true,
-      "maintainer": "hkamori <dev@tryliner.fun>",
+      "maintainer": "WAVEN",
       "icon": "build/icons",
       "target": [
         "AppImage",
@@ -64,23 +64,24 @@
       "category": "Audio"
     },
     "deb": {
-      "packageName": "liner",
-      "artifactName": "liner_${version}_${arch}.${ext}"
+      "packageName": "waven",
+      "artifactName": "waven_${version}_${arch}.${ext}"
     },
     "appImage": {
-      "artifactName": "Liner-${version}.${ext}"
+      "artifactName": "WAVEN-${version}.${ext}"
     },
     "win": {
-      "executableName": "liner2",
+      "executableName": "waven",
       "icon": "build/icon.ico",
       "target": [
         "nsis"
       ]
     },
     "nsis": {
-      "artifactName": "Liner-2.0-Setup-${version}.${ext}",
+      "artifactName": "WAVEN-Setup.${ext}",
       "allowToChangeInstallationDirectory": true,
-      "oneClick": false
+      "oneClick": false,
+      "shortcutName": "WAVEN"
     },
     "mac": {
       "icon": "build/icon.png",

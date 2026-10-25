@@ -43,7 +43,7 @@
   },
   "common": {
     "app": {
-      "name": "Liner",
+      "name": "WAVEN",
       "description": "Mais do que você gosta",
       "version": "Versão 0.1.0"
     },
@@ -248,7 +248,7 @@
     "sign_in_to_account": "Entre na sua conta",
     "auth_title_login": "Sua música, do seu jeito",
     "auth_subtitle_login": "Entre e continue exatamente de onde parou.",
-    "auth_title_register": "Junte-se ao Liner",
+    "auth_title_register": "Junte-se ao WAVEN",
     "auth_subtitle_register": "Crie uma conta e comece a montar a sua biblioteca pessoal.",
     "profile_setup_title": "Configure seu perfil",
     "profile_setup_subtitle": "Escolha seu handle único e seu nome de exibição.",
@@ -475,9 +475,9 @@
     "shortcuts": {
       "description": "Personalize os atalhos globais do sistema e os do player.",
       "global_section": "Atalhos globais (em todo o sistema)",
-      "global_desc": "Funcionam a partir de qualquer aplicativo do seu computador, mesmo com o Liner minimizado ou fora de foco.",
+      "global_desc": "Funcionam a partir de qualquer aplicativo do seu computador, mesmo com o WAVEN minimizado ou fora de foco.",
       "main_app_section": "Aplicativo principal",
-      "main_app_desc": "Ativos quando a janela principal do Liner estiver aberta e em foco.",
+      "main_app_desc": "Ativos quando a janela principal do WAVEN estiver aberta e em foco.",
       "miniplayer_section": "Modo miniplayer",
       "miniplayer_desc": "Ativos quando o miniplayer flutuante do desktop estiver em foco.",
       "toggle_overlay": "Alternar miniplayer flutuante",
@@ -551,7 +551,7 @@
       },
       "auto_show_on_minimize": {
         "title": "Mostrar automaticamente ao minimizar",
-        "description": "Mostra o overlay automaticamente quando o Liner é minimizado."
+        "description": "Mostra o overlay automaticamente quando o WAVEN é minimizado."
       },
       "always_on_top": {
         "title": "Sempre no topo",
@@ -679,8 +679,8 @@
       "title": "Cache e armazenamento",
       "description": "Detalhamento do armazenamento, análise do cache local e arquivos de mídia.",
       "usage_title": "Uso de armazenamento",
-      "device_usage": "O Liner está usando {size} do armazenamento local.",
-      "device_usage_raw": "O Liner está usando {size} do armazenamento local.",
+      "device_usage": "O WAVEN está usando {size} do armazenamento local.",
+      "device_usage_raw": "O WAVEN está usando {size} do armazenamento local.",
       "audio_cache_limit": "Limite do tamanho do cache",
       "audio_cache_limit_desc": "Arquivos e mídias antigos são removidos automaticamente quando cheio",
       "cache_limit": "Limite do tamanho do cache",
@@ -696,7 +696,7 @@
       "empty_storage": "O cache está limpinho!",
       "cloud_disclaimer": "Todas as mídias, capas e faixas ficam na nuvem e serão baixadas novamente de forma transparente ao tocar.",
       "clearing_title": "Limpando cache...",
-      "clearing_subtitle": "Mantenha esta janela aberta enquanto o Liner limpa o seu cache.",
+      "clearing_subtitle": "Mantenha esta janela aberta enquanto o WAVEN limpa o seu cache.",
       "cleared_title": "Armazenamento limpo",
       "cleared_subtitle": "O seu cache foi completamente limpo. Novas mídias serão transmitidas e armazenadas em cache automaticamente.",
       "done_button": "Concluir",
@@ -745,7 +745,7 @@
       "title": "Perfil",
       "signed_in_as": "Conectado como",
       "not_signed_in": "No momento não conectado a uma sessão reconhecida.",
-      "sign_in": "Entrar no Liner",
+      "sign_in": "Entrar no WAVEN",
       "sign_out": "Sair",
       "sign_out_confirm": "Tem certeza de que deseja sair?",
       "edit_profile": "Editar perfil",
@@ -798,7 +798,7 @@
       "badge_private": "Privado"
     },
     "about": {
-      "liner": "Liner",
+      "liner": "WAVEN",
       "telegram": "Canal",
       "support": "Suporte",
       "github": "GitHub",
@@ -907,7 +907,7 @@
   },
   "error_screen": {
     "title": "Algo deu errado",
-    "subtitle": "Ocorreu um erro inesperado no Liner. Você pode recarregar o app ou tentar novamente.",
+    "subtitle": "Ocorreu um erro inesperado no WAVEN. Você pode recarregar o app ou tentar novamente.",
     "reload": "Recarregar o app",
     "try_again": "Tentar novamente",
     "go_home": "Ir para o início",
@@ -934,13 +934,13 @@
   },
   "connectivity": {
     "wall_title": "Falha na conexão",
-    "wall_subtitle": "O Liner não consegue alcançar os seus servidores. A sua música e a sua biblioteca estão seguras.",
+    "wall_subtitle": "O WAVEN não consegue alcançar os seus servidores. A sua música e a sua biblioteca estão seguras.",
     "wall_title_server": "Os servidores da Liner estão com problemas",
     "wall_subtitle_server": "Sua conexão está boa, o servidor respondeu com um erro. Sua música e biblioteca estão seguras; tente novamente em alguns minutos.",
     "steps_title": "Correções rápidas que vale tentar",
     "step_net": "Verifique se o Wi-Fi ou o cabo está conectado e se as páginas abrem no navegador.",
     "step_vpn": "Pause a VPN, o proxy ou filtros de DNS por um minuto — eles costumam bloquear o app.",
-    "step_firewall": "Permita o Liner no firewall e nas proteções de rede do antivírus.",
+    "step_firewall": "Permita o WAVEN no firewall e nas proteções de rede do antivírus.",
     "step_router": "Reinicie o roteador e pressione Tentar novamente abaixo.",
     "retry": "Tentar novamente",
     "retrying": "Verificando…",
@@ -965,13 +965,13 @@
   },
   "updater": {
     "modal_title": "Nova atualização disponível",
-    "modal_desc": "Uma nova versão do Liner (v{version}) está pronta para baixar.",
+    "modal_desc": "Uma nova versão do WAVEN (v{version}) está pronta para baixar.",
     "view_changelog": "Changelog",
     "skip_button": "Pular",
     "update_button": "Atualizar",
     "downloading_title": "Baixando atualização…",
     "downloaded_title": "Atualização baixada",
-    "downloaded_desc": "Reinicie o Liner para instalar a versão {version}.",
+    "downloaded_desc": "Reinicie o WAVEN para instalar a versão {version}.",
     "install_button": "Instalar",
     "error_title": "Falha na atualização"
   },

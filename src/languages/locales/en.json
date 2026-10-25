@@ -43,7 +43,7 @@
   },
   "common": {
     "app": {
-      "name": "Liner",
+      "name": "WAVEN",
       "description": "More of what you like",
       "version": "Version 0.1.0"
     },
@@ -246,7 +246,7 @@
     "sign_in_to_account": "Sign in to your account",
     "auth_title_login": "Your music, your way",
     "auth_subtitle_login": "Sign in and pick up right where you left off.",
-    "auth_title_register": "Join Liner",
+    "auth_title_register": "Create a Liner account",
     "auth_subtitle_register": "Create an account and start building your personal library.",
     "profile_setup_title": "Set up your profile",
     "profile_setup_subtitle": "Choose your unique handle and display name.",
@@ -479,9 +479,9 @@
     "shortcuts": {
       "description": "Customize global system-wide and player keyboard shortcuts.",
       "global_section": "Global Shortcuts (System-wide)",
-      "global_desc": "Work from any application across your computer, even when Liner is minimized or not focused.",
+      "global_desc": "Work from any application across your computer, even when WAVEN is minimized or not focused.",
       "main_app_section": "Main Application",
-      "main_app_desc": "Active when the main Liner window is open and focused.",
+      "main_app_desc": "Active when the main WAVEN window is open and focused.",
       "miniplayer_section": "Miniplayer Mode",
       "miniplayer_desc": "Active when the desktop overlay miniplayer is focused.",
       "toggle_overlay": "Toggle miniplayer overlay",
@@ -555,7 +555,7 @@
       },
       "auto_show_on_minimize": {
         "title": "Auto-show on minimize",
-        "description": "Automatically show the overlay when Liner is minimized."
+        "description": "Automatically show the overlay when WAVEN is minimized."
       },
       "always_on_top": {
         "title": "Always on top",
@@ -575,7 +575,7 @@
       },
       "sync_library": {
         "title": "Sync library",
-        "description": "Show playlists from your YouTube account in the library next to Liner playlists."
+        "description": "Show playlists from your YouTube account in the library next to WAVEN playlists."
       },
       "sign_out": "Sign out",
       "sign_in": "Sign in",
@@ -703,8 +703,8 @@
       "title": "Cache & Storage",
       "description": "Storage breakdown, local cache analytics and media files.",
       "usage_title": "Storage Usage",
-      "device_usage": "Liner is currently using {size} of local storage.",
-      "device_usage_raw": "Liner is currently using {size} of local storage.",
+      "device_usage": "WAVEN is currently using {size} of local storage.",
+      "device_usage_raw": "WAVEN is currently using {size} of local storage.",
       "audio_cache_limit": "Cache size limit",
       "audio_cache_limit_desc": "Older files and media are automatically removed when full",
       "cache_limit": "Cache size limit",
@@ -720,7 +720,7 @@
       "empty_storage": "Cache is squeaky clean!",
       "cloud_disclaimer": "All media, covers and tracks stay in the cloud and will be re-downloaded seamlessly when played.",
       "clearing_title": "Clearing cache...",
-      "clearing_subtitle": "Please keep this window open while Liner is cleaning your cache.",
+      "clearing_subtitle": "Please keep this window open while WAVEN is cleaning your cache.",
       "cleared_title": "Storage Cleared",
       "cleared_subtitle": "Your cache has been swept clean. New media will stream and cache automatically.",
       "done_button": "Done",
@@ -769,7 +769,7 @@
       "title": "Profile",
       "signed_in_as": "Signed in as",
       "not_signed_in": "Not currently signed in to a recognized session.",
-      "sign_in": "Sign in to Liner",
+      "sign_in": "Sign in with your Liner account",
       "sign_out": "Sign out",
       "sign_out_confirm": "Are you sure you want to sign out?",
       "edit_profile": "Edit profile",
@@ -822,7 +822,7 @@
       "badge_private": "Private"
     },
     "about": {
-      "liner": "Liner",
+      "liner": "WAVEN",
       "telegram": "Channel",
       "support": "Support",
       "github": "GitHub",
@@ -922,7 +922,7 @@
         "dawn": "Dawn"
       },
       "accents": {
-        "default": "Liner red",
+        "default": "Classic red",
         "orange": "Orange",
         "amber": "Amber",
         "green": "Green",
@@ -975,7 +975,7 @@
       "sleep_cancel": "Cancel sleep timer",
       "sleep_fired": "Sleep timer paused playback",
       "notify_title": "Now-playing notifications",
-      "notify_description": "Show a desktop notification when the song changes while Liner is in the background.",
+      "notify_description": "Show a desktop notification when the song changes while WAVEN is in the background.",
       "effects_section": "Effects",
       "off": "Off",
       "crossfade_title": "Crossfade",
@@ -987,7 +987,7 @@
       "visualizer_title": "Visualizer",
       "visualizer_description": "Animated bars in the fullscreen player. Off in performance mode.",
       "alarm_title": "Wake-up alarm",
-      "alarm_description": "Starts what you last played at a set time, rising slowly from silence. Liner must be open and your PC awake.",
+      "alarm_description": "Starts what you last played at a set time, rising slowly from silence. WAVEN must be open and your PC awake.",
       "alarm_time": "Alarm time",
       "alarm_daily": "Every day",
       "alarm_fired": "Good morning! Your alarm is playing.",
@@ -996,7 +996,7 @@
     "performance": {
       "section": "Performance",
       "title": "Performance mode",
-      "description": "Uses less CPU, GPU and memory: turns off glass blur, wallpaper blur and motion, slows the fullscreen background to 30 fps at lower resolution, trims memory while Liner is hidden, and shuts down the YouTube helper sooner when idle.",
+      "description": "Uses less CPU, GPU and memory: turns off glass blur, wallpaper blur and motion, slows the fullscreen background to 30 fps at lower resolution, trims memory while WAVEN is hidden, and shuts down the YouTube helper sooner when idle.",
       "button_on": "Performance mode is on (click to turn off)",
       "button_off": "Turn on performance mode",
       "toast_on": "Performance mode on",
@@ -1027,16 +1027,16 @@
       "saved": "Theme saved",
       "exported": "Theme exported to Downloads",
       "imported": "Theme imported",
-      "import_failed": "That file isn't a Liner theme"
+      "import_failed": "That file isn't a WAVEN theme"
     },
     "desktop": {
       "description": "Tray, startup and settings backup.",
       "window_section": "Window",
       "backup_section": "Backup",
       "tray_title": "Close to tray",
-      "tray_description": "Closing the window keeps Liner running in the system tray. Quit from the tray icon.",
+      "tray_description": "Closing the window keeps WAVEN running in the system tray. Quit from the tray icon.",
       "login_title": "Start with Windows",
-      "login_description": "Open Liner in the tray when you sign in to Windows.",
+      "login_description": "Open WAVEN in the tray when you sign in to Windows.",
       "backup_title": "Settings backup",
       "backup_description": "Export wallpaper, themes, sound, pins, shortcuts and listening history to a file, or restore one.",
       "export": "Export",
@@ -1044,7 +1044,7 @@
       "backup_saved": "Backup saved to Downloads",
       "backup_failed": "Couldn't create the backup",
       "restored": "Settings restored, reloading…",
-      "restore_failed": "That file isn't a Liner 2.0 backup",
+      "restore_failed": "That file isn't a WAVEN backup",
       "save_failed": "Couldn't save that setting"
     }
   },
@@ -1116,7 +1116,7 @@
   },
   "error_screen": {
     "title": "Something went wrong",
-    "subtitle": "An unexpected error occurred in Liner. You can reload the app or try again.",
+    "subtitle": "An unexpected error occurred in WAVEN. You can reload the app or try again.",
     "reload": "Reload app",
     "try_again": "Try again",
     "go_home": "Go to home",
@@ -1143,13 +1143,13 @@
   },
   "connectivity": {
     "wall_title": "Connection failed",
-    "wall_subtitle": "Liner can't reach its servers. Your music and library are safe.",
+    "wall_subtitle": "WAVEN can't reach Liner's servers. Your music and library are safe.",
     "wall_title_server": "Liner's servers are having trouble",
     "wall_subtitle_server": "Your connection is fine, the server answered with an error. Your music and library are safe, try again in a few minutes.",
     "steps_title": "Quick fixes worth trying",
     "step_net": "Check that Wi-Fi or cable is connected and pages open in a browser.",
     "step_vpn": "Pause VPN, proxy or DNS filters for a minute — they often block the app.",
-    "step_firewall": "Allow Liner through the firewall and antivirus network shields.",
+    "step_firewall": "Allow WAVEN through the firewall and antivirus network shields.",
     "step_router": "Restart the router, then press Retry below.",
     "retry": "Retry",
     "retrying": "Checking…",
@@ -1174,13 +1174,13 @@
   },
   "updater": {
     "modal_title": "New Update Available",
-    "modal_desc": "A new version of Liner (v{version}) is ready to download.",
+    "modal_desc": "A new version of WAVEN (v{version}) is ready to download.",
     "view_changelog": "Changelog",
     "skip_button": "Skip",
     "update_button": "Update",
     "downloading_title": "Downloading update…",
     "downloaded_title": "Update downloaded",
-    "downloaded_desc": "Restart Liner to install version {version}.",
+    "downloaded_desc": "Restart WAVEN to install version {version}.",
     "install_button": "Install",
     "error_title": "Update failed"
   },
@@ -1211,7 +1211,7 @@
   },
   "stats": {
     "title": "Your stats",
-    "subtitle": "Built from what you play in Liner 2.0 on this computer.",
+    "subtitle": "Built from what you play in WAVEN on this computer.",
     "range": {
       "week": "7 days",
       "month": "30 days",
@@ -1253,7 +1253,7 @@
       "tools": "Tools",
       "settings": "Settings",
       "playlists": "Playlists",
-      "liner2": "Liner 2.0"
+      "liner2": "WAVEN"
     },
     "open_search": "Search music",
     "play_pause": "Play / pause",

@@ -1,7 +1,7 @@
 import { forwardRef, memo } from "react";
 import { Link } from "react-router-dom";
 import WindowControls from "@/features/navigation/ui/WindowControls";
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/waven-logo.png";
 import { cn } from "@/shared/lib";
 import { SleepTimerChip } from "@/features/sound";
 import { PerformanceModeButton } from "@/features/personalization";
@@ -29,15 +29,15 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(function Header(
         <Link
           to="/"
           data-no-window-drag
-          title="Liner"
+          title="WAVEN"
           className="flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
         >
           <img
             src={logo}
-            alt="Liner"
-            width={39}
-            height={30}
-            className="h-[30px] w-auto object-contain theme-logo invert dark:invert-0 select-none"
+            alt="WAVEN"
+            width={44}
+            height={16}
+            className="h-[16px] w-[44px] object-contain theme-logo invert dark:invert-0 select-none"
             draggable={false}
           />
         </Link>

@@ -565,7 +565,7 @@ export default function SettingsModal() {
 
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-  const displayName = userDisplayName(user) ?? "Liner";
+  const displayName = userDisplayName(user) ?? "WAVEN";
   const handle = user?.username
     ? `@${user.username}`
     : (user?.email ?? t("settings.manage_account"));

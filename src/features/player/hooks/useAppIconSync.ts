@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/waven-logo.png";
 
 async function renderIconDataUrl(isLight: boolean): Promise<string> {
   const canvas = document.createElement("canvas");
@@ -36,7 +36,10 @@ async function renderIconDataUrl(isLight: boolean): Promise<string> {
     ctx.filter = "invert(1)";
   }
 
-  ctx.drawImage(img, 112, 144, 288, 224);
+  // the wave is wide, so fit it by width and centre it vertically
+  const w = 400;
+  const h = (img.naturalHeight / Math.max(1, img.naturalWidth)) * w;
+  ctx.drawImage(img, (512 - w) / 2, (512 - h) / 2, w, h);
   return canvas.toDataURL("image/png");
 }
 

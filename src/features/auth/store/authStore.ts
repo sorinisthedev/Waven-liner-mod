@@ -11,6 +11,7 @@ import {
 } from "@/shared/api";
 import { playerEngine } from "@/features/player";
 import { queryCache } from "@/shared/cache/queryCache";
+import { LOCAL_MODE } from "@/shared/local/mode";
 
 export type AuthStatus = "initializing" | "authenticated" | "anonymous";
 export type AuthState = {
@@ -32,6 +33,30 @@ export const useAuthStore = create<AuthState>((set) => ({
   status: "initializing",
   user: null,
   initialize: async () => {
+    if (LOCAL_MODE) {
+      // no account: the profile lives on this PC
+      try {
+        set({ status: "authenticated", user: await api.getMe() });
+      } catch {
+        set({ status: "authenticated", user: { id: "local", username: "you", displayName: null } });
+      }
+      void import("@/shared/local/linerImport")
+        .then(({ importLinerLibraryOnce }) => importLinerLibraryOnce())
+        .then((copied) => {
+          if (!copied) return;
+          window.dispatchEvent(new Event("library:changed"));
+          window.dispatchEvent(
+            new CustomEvent("liner:toast", {
+              detail: {
+                message: `Copied ${copied.likes} liked songs and ${copied.playlists} playlists from Liner to this PC`,
+                variant: "success",
+              },
+            }),
+          );
+        })
+        .catch(() => {});
+      return;
+    }
     const stored = getAuthSession();
     if (!stored) {
       set({ status: "anonymous", user: null });
@@ -108,6 +133,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   updateProfile: async (patch) => {
     const updated = await api.updateProfile(patch);
+    if (LOCAL_MODE) {
+      set((prev) => ({ user: prev.user ? { ...prev.user, ...updated } : updated }));
+      return updated;
+    }
     const current = getAuthSession();
     if (current) {
       setAuthSession({ ...current, user: { ...current.user, ...updated } });
@@ -118,6 +147,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     return updated;
   },
   logout: async () => {
+    // nothing to sign out of when everything is local
+    if (LOCAL_MODE) return;
     await clearPlayback();
     try {
       window.linerElectron?.closeOverlay?.();

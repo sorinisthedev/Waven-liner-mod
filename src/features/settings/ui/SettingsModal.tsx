@@ -29,6 +29,7 @@ import { useTranslation, getTranslationsForAllLocales } from "@/languages";
 import { useModalStore } from "@/features/library";
 import { useAuthStore } from "@/features/auth";
 import { userDisplayName } from "@/entities/user";
+import { LOCAL_MODE } from "@/shared/local/mode";
 import {
   PlaybackTab,
   ShortcutsTab,
@@ -566,9 +567,11 @@ export default function SettingsModal() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const displayName = userDisplayName(user) ?? "WAVEN";
-  const handle = user?.username
-    ? `@${user.username}`
-    : (user?.email ?? t("settings.manage_account"));
+  const handle = LOCAL_MODE
+    ? t("settings.profile_custom.local_profile")
+    : user?.username
+      ? `@${user.username}`
+      : (user?.email ?? t("settings.manage_account"));
 
   return (
     <Dialog
@@ -757,6 +760,7 @@ export default function SettingsModal() {
               </span>
             </span>
             </button>
+            {!LOCAL_MODE && (
             <button
               type="button"
               onClick={async () => {
@@ -769,6 +773,7 @@ export default function SettingsModal() {
             >
               <ExitLine size={18} className="shrink-0" />
             </button>
+            )}
           </div>
         </div>
       </aside>

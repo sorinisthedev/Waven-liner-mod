@@ -2,6 +2,7 @@ import { innertubeCatalog } from "@/shared/youtube";
 import { isSoundCloudCatalogId, isSoundCloudUrl, resolveSoundCloudUrl, soundcloudCatalog } from "@/shared/media/soundcloud";
 import { isAbortError } from "@/shared/utils/abort";
 import { log } from "@/shared/utils/logger";
+import { LOCAL_MODE } from "@/shared/local/mode";
 import type {
   AlbumDetails,
   ArtistDetails,
@@ -22,6 +23,7 @@ async function preferClient<T>(label: string, client: () => Promise<T>, server: 
     return await client();
   } catch (error) {
     if (isAbortError(error)) throw error;
+    if (LOCAL_MODE) throw error;
     log("yellow", "catalog", `${label} failed on client, using server fallback`, error);
     return server();
   }

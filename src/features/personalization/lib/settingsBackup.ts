@@ -1,5 +1,6 @@
 import { debouncedStorage } from "@/shared/utils/storage";
 import { getWallpaperAsset, putWallpaperAsset } from "./wallpaperAssets";
+import { flushLocalData, loadLocalData, replaceLocalData } from "@/shared/local/localStore";
 
 /** settings stores a backup carries; auth and caches are deliberately left out */
 export const BACKUP_KEYS = [
@@ -23,6 +24,8 @@ interface BackupFile {
   storage: Record<string, string>;
   /** custom wallpaper image as a data url, when one is set */
   wallpaper?: { key: string; dataUrl: string };
+  /** likes, playlists, saved items and history kept on this PC */
+  library?: unknown;
 }
 
 function blobToDataUrl(blob: Blob): Promise<string> {
@@ -41,11 +44,13 @@ export async function createBackup(): Promise<Blob> {
     const value = localStorage.getItem(key);
     if (value !== null) storage[key] = value;
   }
+  await flushLocalData().catch(() => {});
   const file: BackupFile = {
     app: "waven",
     version: 1,
     exportedAt: new Date().toISOString(),
     storage,
+    library: await loadLocalData(),
   };
   try {
     const personalization = JSON.parse(storage.liner_personalization_v1 ?? "null");
@@ -84,6 +89,7 @@ export async function restoreBackup(text: string): Promise<void> {
     if (key !== "theme") JSON.parse(value); // reject corrupt store blobs up front
     localStorage.setItem(key, value);
   }
+  if (parsed.library && typeof parsed.library === "object") await replaceLocalData(parsed.library);
   const wp = parsed.wallpaper;
   if (wp && typeof wp.key === "string" && typeof wp.dataUrl === "string" && wp.dataUrl.startsWith("data:image/")) {
     const blob = await (await fetch(wp.dataUrl)).blob();

@@ -5,8 +5,8 @@
 <h1 align="center">WAVEN</h1>
 
 <p align="center">
-  <b>A desktop music player built on <a href="https://github.com/tryliner/desktop">Liner</a>, made yours.</b><br>
-  Wallpapers, custom themes, an equalizer, listening stats, a command palette, performance mode and more.
+  <b>A free desktop music player. No account, no sign-in: everything stays on your PC.</b><br>
+  Search any song, build playlists, synced lyrics, wallpapers, themes, an equalizer, listening stats and more.
 </p>
 
 <p align="center">
@@ -22,18 +22,20 @@
   <img src=".github/assets/waven-stats.png" alt="WAVEN stats page with the Aurora wallpaper" width="820">
 </p>
 
-> **WAVEN is an unofficial, personal build of Liner.** It is not made by, endorsed by or affiliated with the Liner team. Sign-in, the music catalogue and lyrics still come from Liner's servers, so you use your Liner account.
+> **WAVEN is an unofficial, personal build based on [Liner](https://github.com/tryliner/desktop).** It is not made by, endorsed by or affiliated with the Liner team. WAVEN doesn't use Liner's servers: music comes from YouTube Music and SoundCloud, lyrics from [LRCLIB](https://lrclib.net), and your library is saved on your own PC.
 
 ## Install
 
 1. **[Download WAVEN-Setup.exe](https://github.com/sorinisthedev/Liner2.0/releases/latest/download/WAVEN-Setup.exe)** and run it.
-2. Sign in with your Liner account.
-3. Open WAVEN from the Start menu. If you had Liner 2.0 installed, WAVEN replaces it and keeps your login and settings.
+2. Open WAVEN from the Start menu and start listening. There's nothing to sign up for.
+3. Coming from Liner 2.0? WAVEN replaces it, keeps your settings, and copies your Liner likes and playlists to your PC the first time it opens.
 
 > Windows may say "Windows protected your PC" because the installer isn't code-signed. Click **More info → Run anyway**.
 
 ## What you get
 
+- **No account**: likes, playlists, saved albums and artists, and your history are stored on your PC. Back them up to a file from Settings.
+- **Search and play anything** from YouTube Music and SoundCloud, with albums, artists, song radio, daily mixes and the weekly charts.
 - **Make it yours**: profile picture, app wallpapers (gradients or your own image), accent colors, app and lyrics fonts, and a custom theme builder with import and export.
 - **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, a visualizer, a sleep timer and a wake-up alarm.
 - **Your stats**: minutes listened, top songs and artists, when you listen, a full play history and a shareable Wrapped-style card.

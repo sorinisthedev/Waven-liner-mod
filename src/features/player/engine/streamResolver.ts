@@ -23,6 +23,7 @@ import {
   type PlaybackStream,
 } from "./playbackStream";
 import { findYoutubeStandIn } from "./youtubeStandIn";
+import { LOCAL_MODE } from "@/shared/local/mode";
 
 export interface ResolveStreamOptions {
   progressive?: boolean;
@@ -113,7 +114,7 @@ async function resolveYoutubeTrack(
   progressive: boolean,
   signal?: AbortSignal,
 ): Promise<PlaybackStream> {
-  const liner = await resolveLinerStream(videoId, signal);
+  const liner = LOCAL_MODE ? null : await resolveLinerStream(videoId, signal);
   if (liner) {
     log("cyan", "playback", `playing liner audio (r2) for "${track.title}"`);
     return fromLinerStream(liner, track);

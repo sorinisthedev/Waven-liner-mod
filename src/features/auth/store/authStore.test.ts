@@ -7,6 +7,9 @@ vi.mock("@/features/player", () => ({ playerEngine: player }));
 import { useAuthStore } from "./authStore";
 import { api, ApiError, getAuthSession, setAuthSession, type AuthTokens } from "@/shared/api";
 
+// these cover the Liner account flow, which only runs with local mode off
+vi.mock("@/shared/local/mode", () => ({ LOCAL_MODE: false }));
+
 const stored = {
   accessToken: "expired-access",
   refreshToken: "refresh-1",

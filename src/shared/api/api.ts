@@ -11,6 +11,9 @@ import {
 import { signApiRequest, syncServerTime } from "./requestSigner";
 import { clientCatalog } from "./clientCatalog";
 import { getLocalImportHandler } from "./localImports";
+import { LOCAL_MODE } from "@/shared/local/mode";
+import { handleLocalRequest } from "@/shared/local/localBackend";
+import { localLyricsStream } from "@/shared/local/localLyrics";
 import type { Track } from "@/shared/contracts";
 import { telemetry } from "@/shared/telemetry";
 import type {
@@ -386,12 +389,19 @@ async function executeRequest<T>(
   return res.json() as Promise<T>;
 }
 
+/** talks to Liner's servers even in local mode; only the library import uses it */
+export function remoteRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  return executeRequest<T>(path, init);
+}
+
 async function request<T>(
   path: string,
   init?: RequestInit,
   allowRefresh = true,
   timeoutMs = DEFAULT_TIMEOUT_MS,
 ): Promise<T> {
+  // no Liner servers: answered from data on this PC
+  if (LOCAL_MODE) return handleLocalRequest<T>(path, init);
   const method = (init?.method ?? "GET").toUpperCase();
   if (method === "GET" && !init?.signal) {
     const key = `${path}::${allowRefresh}`;
@@ -892,6 +902,10 @@ export const api = {
     signal?: AbortSignal,
     hint?: { title: string; artist: string; durationMs?: number },
   ): AsyncGenerator<LyricsStreamEvent> {
+    if (LOCAL_MODE) {
+      yield* localLyricsStream(hint, signal);
+      return;
+    }
     const hintParams =
       hint?.title.trim() && hint.artist.trim()
         ? new URLSearchParams({

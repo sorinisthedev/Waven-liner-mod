@@ -875,11 +875,12 @@
       "shape_rounded": "Rounded",
       "shape_circle": "Circle",
       "name_title": "Display name",
-      "name_description": "Shown in greetings and on your Liner profile. Saved to your account.",
+      "name_description": "Shown in greetings. Saved on this PC.",
       "save": "Save",
       "saving": "Saving…",
       "name_saved": "Display name saved",
-      "name_failed": "Couldn't save your display name"
+      "name_failed": "Couldn't save your display name",
+      "local_profile": "Saved on this PC"
     },
     "personalize": {
       "description": "Wallpaper, accent color and background effects.",
@@ -1038,7 +1039,7 @@
       "login_title": "Start with Windows",
       "login_description": "Open WAVEN in the tray when you sign in to Windows.",
       "backup_title": "Settings backup",
-      "backup_description": "Export wallpaper, themes, sound, pins, shortcuts and listening history to a file, or restore one.",
+      "backup_description": "Export your library, playlists, history, wallpaper, themes, sound and shortcuts to a file, or restore one.",
       "export": "Export",
       "import": "Restore",
       "backup_saved": "Backup saved to Downloads",

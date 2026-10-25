@@ -41,8 +41,28 @@ export interface DiscordRpcStatePayload {
 
 export const LINER_DISCORD_APPLICATION_ID = "1561339119617974362";
 
+// paste the Application ID of a Discord app named "WAVEN" here (made at
+// discord.com/developers/applications) so Discord shows WAVEN as the app name
+export const WAVEN_DISCORD_APPLICATION_ID = "1563767847719800865";
+
+// served from the public WAVEN repo so Discord can load it
+const WAVEN_ICON_URL =
+  "https://raw.githubusercontent.com/sorinisthedev/Waven-liner-mod/main/.github/assets/waven-icon.png";
+const WAVEN_RELEASES_URL = "https://github.com/sorinisthedev/Waven-liner-mod/releases/latest";
+
 function builtInApplicationId(): string {
-  return process.env.LINER_DISCORD_CLIENT_ID?.trim() || LINER_DISCORD_APPLICATION_ID;
+  return (
+    process.env.WAVEN_DISCORD_CLIENT_ID?.trim() ||
+    WAVEN_DISCORD_APPLICATION_ID ||
+    process.env.LINER_DISCORD_CLIENT_ID?.trim() ||
+    LINER_DISCORD_APPLICATION_ID
+  );
+}
+
+/** youtube music link for a youtube-backed track, nothing for local files */
+function youtubeMusicUrl(trackId: string): string | undefined {
+  const id = trackId.replace(/^yt:/, "");
+  return /^[a-zA-Z0-9_-]{11}$/.test(id) ? `https://music.youtube.com/watch?v=${id}` : undefined;
 }
 
 const DEFAULT_SETTINGS: DiscordRpcSettings = {
@@ -304,7 +324,7 @@ export class DiscordRpcManager {
 
       const dur = Math.max(0, payload.durationMs || track.durationMs || 0);
 
-      let activityName = "Liner";
+      let activityName = "WAVEN";
       let detailsText = title;
       let stateText = isPaused ? `${artist} (Paused)` : artist;
       let rpcStatusDisplayType = StatusDisplayType.STATE; // 1 -> "Listening to [Artist]"
@@ -317,7 +337,7 @@ export class DiscordRpcManager {
           stateText = artist;
           break;
         case "app":
-          activityName = "Liner";
+          activityName = "WAVEN";
           rpcStatusDisplayType = StatusDisplayType.NAME; // 0 -> "Listening to Liner"
           detailsText = title;
           stateText = isPaused ? `${artist} (Paused)` : artist;
@@ -344,7 +364,7 @@ export class DiscordRpcManager {
       }
 
       const activity: SetActivity & { status_display_type?: number } = {
-        name: sanitizeText(activityName) || "Liner",
+        name: sanitizeText(activityName) || "WAVEN",
         type: 2, // 2 = ActivityType.Listening -> renders "Listening to" + live progress bar
         details: sanitizeText(detailsText),
         state: sanitizeText(stateText),
@@ -361,35 +381,32 @@ export class DiscordRpcManager {
         activity.endTimestamp = new Date(now - currentPos + dur);
       }
 
-      // Large artwork (Album/Track cover)
+      // big picture: the song's cover, or the WAVEN logo when there is none
+      // (local files without art, covers Discord can't load)
       const coverImage = toDiscordImageUrl(track.coverUrl);
-      if (this.settings.showArtwork && coverImage) {
-        activity.largeImageKey = coverImage;
-        activity.largeImageText = sanitizeText(track.album || track.title) || "Liner";
+      if (this.settings.showArtwork) {
+        activity.largeImageKey = coverImage ?? WAVEN_ICON_URL;
+        activity.largeImageText = sanitizeText(track.album || track.title) || "WAVEN";
       }
 
-      // Small artwork (Artist photo badge)
+      // small badge: the WAVEN logo, so friends can tell what's playing it
+      activity.smallImageKey = WAVEN_ICON_URL;
+      activity.smallImageText = "WAVEN";
       const artistImage = toDiscordImageUrl(payload.artistImageUrl);
-      if (this.settings.showArtistSmallImage && artistImage) {
-        activity.smallImageKey = artistImage;
-        activity.smallImageText = sanitizeText(track.artist) || "Artist";
+      if (this.settings.showArtistSmallImage && artistImage && !coverImage) {
+        activity.largeImageKey = artistImage;
       }
 
-      // Action buttons linking to song or tryliner.fun (Discord allows up to 2 buttons)
+      // buttons: open the song on YouTube Music, and get WAVEN (Discord allows 2)
       const buttons: Array<{ label: string; url: string }> = [];
 
-      if (this.settings.showButton && track.id) {
-        buttons.push({
-          label: "Listen on Liner",
-          url: `https://link.tryliner.fun/track?id=${encodeURIComponent(track.id)}`,
-        });
+      const songUrl = track.id ? youtubeMusicUrl(track.id) : undefined;
+      if (this.settings.showButton && songUrl) {
+        buttons.push({ label: "Play on YouTube Music", url: songUrl });
       }
 
       if (this.settings.showDownloadButton) {
-        buttons.push({
-          label: "Download Liner",
-          url: "https://tryliner.fun",
-        });
+        buttons.push({ label: "Get WAVEN", url: WAVEN_RELEASES_URL });
       }
 
       if (buttons.length > 0) {

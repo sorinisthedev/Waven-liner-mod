@@ -180,6 +180,23 @@ export interface LinerElectronApi {
   discordUpdateState: (state: any) => void;
   discordUpdateSettings: (settings: any) => void;
   setPerformanceMode?: (enabled: boolean) => void;
+  localMedia?: {
+    getFolders: () => Promise<string[]>;
+    addFolder: () => Promise<string[]>;
+    removeFolder: (folder: string) => Promise<string[]>;
+    scan: () => Promise<
+      {
+        path: string;
+        title: string;
+        artist: string;
+        album: string;
+        durationMs: number;
+        hasCover: boolean;
+        mtimeMs: number;
+        size: number;
+      }[]
+    >;
+  };
   getDesktopOptions?: () => Promise<{ closeToTray: boolean; openAtLogin: boolean }>;
   setDesktopOptions?: (
     patch: Partial<{ closeToTray: boolean; openAtLogin: boolean }>,
@@ -430,6 +447,12 @@ const api: LinerElectronApi = {
   },
   discordUpdateSettings: (settings) => {
     ipcRenderer.send("discord:update-settings", settings);
+  },
+  localMedia: {
+    getFolders: () => ipcRenderer.invoke("localmedia:get-folders"),
+    addFolder: () => ipcRenderer.invoke("localmedia:add-folder"),
+    removeFolder: (folder) => ipcRenderer.invoke("localmedia:remove-folder", folder),
+    scan: () => ipcRenderer.invoke("localmedia:scan"),
   },
   getDesktopOptions: () => ipcRenderer.invoke("desktop:get-options"),
   setDesktopOptions: (patch) => ipcRenderer.invoke("desktop:set-options", patch),

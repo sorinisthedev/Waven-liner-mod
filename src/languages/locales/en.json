@@ -53,7 +53,8 @@
       "library": "Library",
       "settings": "Settings",
       "stats": "Stats",
-      "history": "History"
+      "history": "History",
+      "files": "Your files"
     },
     "minimize": "Minimize",
     "exitFullscreen": "Exit fullscreen",
@@ -597,7 +598,7 @@
         "song": "Song Title",
         "artist_song": "Artist - Song",
         "song_artist": "Song - Artist",
-        "app": "Liner (App name)"
+        "app": "WAVEN (app name)"
       },
       "show_timeline": {
         "title": "Playback Timeline",
@@ -609,19 +610,19 @@
       },
       "show_artist_image": {
         "title": "Artist Photo Badge",
-        "description": "Display the artist photo in a small circular badge on the bottom corner."
+        "description": "Use the artist's photo when a song has no cover art. The WAVEN logo always shows as the small badge."
       },
       "show_paused": {
         "title": "Show when Paused",
         "description": "Keep status visible on Discord with a paused indicator when music is paused."
       },
       "show_button": {
-        "title": "'Listen on Liner' Button",
-        "description": "Add an interactive button linking to the song on Liner."
+        "title": "'Play on YouTube Music' button",
+        "description": "Add a button that opens the song you're playing on YouTube Music."
       },
       "show_download_button": {
-        "title": "'Download Liner' Button",
-        "description": "Add an interactive button linking to tryliner.fun to download the app."
+        "title": "'Get WAVEN' button",
+        "description": "Add a button linking to the WAVEN download page."
       },
       "status": {
         "connected": "Connected to Discord ({user})",
@@ -1289,5 +1290,27 @@
     "remove": "Remove icon",
     "saved": "Playlist icon updated",
     "failed": "Couldn't use that image"
+  },
+  "local_files": {
+    "title": "Your files",
+    "subtitle": "{count} songs from folders on this PC",
+    "subtitle_empty": "Play music stored on this PC",
+    "add_folder": "Add folder",
+    "remove_folder": "Remove folder",
+    "rescan": "Scan again",
+    "play_all": "Play all",
+    "search": "Search your files",
+    "scanning": "Scanning your folders…",
+    "empty": "Add a folder with music (MP3, FLAC, M4A, WAV, OGG) and WAVEN will list every song in it, with covers, lyrics and stats like everything else.",
+    "desktop_only": "Your files are available in the WAVEN desktop app."
+  },
+  "offline": {
+    "download": "Download for offline",
+    "remove": "Remove download",
+    "update": "Download {count} new songs",
+    "cancel": "Stop downloading",
+    "started": "Downloading {title}…",
+    "finished": "{title} is ready to play offline",
+    "removed": "Removed the download of {title}"
   }
 }

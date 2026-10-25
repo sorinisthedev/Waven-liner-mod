@@ -3,6 +3,7 @@ import { isSoundCloudCatalogId, isSoundCloudUrl, resolveSoundCloudUrl, soundclou
 import { isAbortError } from "@/shared/utils/abort";
 import { log } from "@/shared/utils/logger";
 import { LOCAL_MODE } from "@/shared/local/mode";
+import { isLocalTrackId, localApiTrack } from "@/shared/local/localFiles";
 import type {
   AlbumDetails,
   ArtistDetails,
@@ -32,6 +33,7 @@ async function preferClient<T>(label: string, client: () => Promise<T>, server: 
 const SNAPSHOT_TIMEOUT_MS = 4000;
 
 async function resolveSnapshot(id: string): Promise<Track | undefined> {
+  if (isLocalTrackId(id)) return localApiTrack(id);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), SNAPSHOT_TIMEOUT_MS);
   const catalog = isSoundCloudCatalogId(id) ? soundcloudCatalog : innertubeCatalog;
@@ -69,6 +71,10 @@ export const clientCatalog = {
   },
 
   getTrack(id: string, server: () => Promise<TrackDetails>): Promise<TrackDetails> {
+    if (isLocalTrackId(id)) {
+      const local = localApiTrack(id);
+      return local ? Promise.resolve(local) : Promise.reject(new Error("Local file not found"));
+    }
     if (isSoundCloudCatalogId(id)) return soundcloudCatalog.getTrack(id);
     return preferClient("track", () => innertubeCatalog.getTrack(id), server);
   },

@@ -8,6 +8,7 @@ import LoginPage from "@/features/auth/ui/LoginPage";
 import PlayerPage from "@/features/player/ui/FullscreenPlayer";
 import StatsPage from "@/features/stats/ui/StatsPage";
 import HistoryPage from "@/features/stats/ui/HistoryPage";
+import LocalFilesPage from "@/features/local-files/ui/LocalFilesPage";
 
 export function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ export function AppRoutes() {
       <Route path="/collection" element={<CollectionPage />} />
       <Route path="/stats" element={<StatsPage />} />
       <Route path="/history" element={<HistoryPage />} />
+      <Route path="/files" element={<LocalFilesPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/settings" element={<Navigate to="/" replace />} />
       <Route path="/player" element={<PlayerPage />} />

@@ -62,11 +62,11 @@ describe("DiscordRpcManager", () => {
     vi.useRealTimers();
   });
 
-  it("connects with Liner's built-in application id by default", async () => {
+  it("connects with the WAVEN application id by default", async () => {
     delete process.env.LINER_DISCORD_CLIENT_ID;
     const manager = new DiscordRpcManager();
     await vi.advanceTimersByTimeAsync(1_000);
-    expect(mocks.clients).toEqual(["1561339119617974362"]);
+    expect(mocks.clients).toEqual(["1563767847719800865"]);
     manager.destroy();
   });
 
@@ -76,7 +76,7 @@ describe("DiscordRpcManager", () => {
     const legacyPatch: Record<string, unknown> = { applicationId: "987654321098765432" };
     manager.updateSettings(legacyPatch);
     await vi.advanceTimersByTimeAsync(1_000);
-    expect(mocks.clients).toEqual(["1561339119617974362"]);
+    expect(mocks.clients).toEqual(["1563767847719800865"]);
     manager.destroy();
   });
 
@@ -108,15 +108,15 @@ describe("DiscordRpcManager", () => {
     manager.destroy();
   });
 
-  it("leaves out images discord cannot load", async () => {
+  it("swaps in the artist photo when discord can't load the cover, with the WAVEN badge", async () => {
     const manager = new DiscordRpcManager();
     await vi.advanceTimersByTimeAsync(5_000);
     mocks.setActivity.mockClear();
     manager.updateState(playing("a", "blob:file:///cover"));
     await vi.advanceTimersByTimeAsync(5_000);
     const activity = mocks.setActivity.mock.calls[0][0];
-    expect(activity.largeImageKey).toBeUndefined();
-    expect(activity.smallImageKey).toBe("https://lh3.googleusercontent.com/a.jpg");
+    expect(activity.largeImageKey).toBe("https://lh3.googleusercontent.com/a.jpg");
+    expect(activity.smallImageKey).toContain("waven-icon.png");
     manager.destroy();
   });
 });

@@ -15,7 +15,7 @@
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-0b0b10?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-111111?style=flat-square">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-111111?style=flat-square">
 </p>
 
 <p align="center">
@@ -36,6 +36,10 @@
 
 - **No account**: likes, playlists, saved albums and artists, and your history are stored on your PC. Back them up to a file from Settings.
 - **Search and play anything** from YouTube Music and SoundCloud, with albums, artists, song radio, daily mixes and the weekly charts.
+- **Your own music files**: add folders from your PC and play your MP3, FLAC, M4A, WAV and OGG files with their covers, next to everything else.
+- **Offline downloads**: download any playlist or album and play it with no internet.
+- **Automatic updates**: WAVEN checks this page for new versions and installs them for you.
+- **Discord status**: shows the song you're playing with its cover, the WAVEN logo and a button to play it on YouTube Music.
 - **Make it yours**: profile picture, app wallpapers (gradients or your own image), accent colors, app and lyrics fonts, and a custom theme builder with import and export.
 - **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, a visualizer, a sleep timer and a wake-up alarm.
 - **Your stats**: minutes listened, top songs and artists, when you listen, a full play history and a shareable Wrapped-style card.

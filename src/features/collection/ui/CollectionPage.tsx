@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
+import { DownloadButton } from "@/features/offline/ui/DownloadButton";
 import {
   useCallback,
   useEffect,
@@ -421,6 +422,14 @@ function CollectionContent() {
                         onSubmit={handleSearchSubmit}
                         className={HERO_GLASS_CLASS}
                       />
+                      {id && (
+                        <DownloadButton
+                          collectionId={`${isAlbum ? "album" : "collection"}:${id}`}
+                          title={data.title}
+                          tracks={data.tracks}
+                          className={HERO_GLASS_BUTTON_CLASS}
+                        />
+                      )}
                       <Button
                         variant="secondary"
                         onClick={handleAddToQueue}

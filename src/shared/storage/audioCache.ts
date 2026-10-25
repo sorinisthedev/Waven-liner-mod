@@ -1,4 +1,5 @@
 import { linerDb } from "./linerDb";
+import { isOfflinePinned } from "./offlinePins";
 
 export const AUDIO_CACHE_LIMIT_STORAGE_KEY = "liner_audio_cache_limit_bytes";
 export const DEFAULT_AUDIO_CACHE_LIMIT_BYTES = 3 * 1024 * 1024 * 1024;
@@ -56,6 +57,8 @@ class AudioCache {
     const oldest = await linerDb.getOldestAudioRecords();
     for (const item of oldest) {
       if (evictedBytes >= bytesToEvict) break;
+      // downloaded for offline: only removed when the download is removed
+      if (isOfflinePinned(item.trackId)) continue;
       const size = item.byteSize || item.blob?.size || 0;
       await this.deleteAudio(item.trackId);
       evictedBytes += size;

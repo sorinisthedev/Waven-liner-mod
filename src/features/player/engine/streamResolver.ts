@@ -24,6 +24,7 @@ import {
 } from "./playbackStream";
 import { findYoutubeStandIn } from "./youtubeStandIn";
 import { LOCAL_MODE } from "@/shared/local/mode";
+import { isLocalTrackId, localFileUrl, localMimeType, localTrackPath } from "@/shared/local/localFiles";
 
 export interface ResolveStreamOptions {
   progressive?: boolean;
@@ -128,6 +129,10 @@ export async function resolvePlaybackStream(
   options: ResolveStreamOptions = {},
 ): Promise<PlaybackStream> {
   const progressive = options.progressive ?? false;
+  if (isLocalTrackId(track.id)) {
+    const filePath = localTrackPath(track.id);
+    return { url: localFileUrl(filePath), mimeType: localMimeType(filePath), codec: "", bitrate: 0, expiresAtMs: null };
+  }
   if (toSoundCloudTrackId(track.id))
     return resolveSoundCloud(track, progressive, signal);
   const videoId = toVideoId(track.id);

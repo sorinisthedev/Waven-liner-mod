@@ -1,6 +1,6 @@
 {
   "name": "@liner/client",
-  "version": "0.2.10",
+  "version": "1.1.0",
   "type": "module",
   "private": true,
   "description": "WAVEN Music Player",
@@ -33,9 +33,15 @@
   "build": {
     "appId": "com.liner2.app",
     "productName": "WAVEN",
-    "executableName": "waven",
+    "executableName": "WAVEN Music",
     "artifactName": "WAVEN-${version}-${arch}.${ext}",
-    "publish": null,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "sorinisthedev",
+        "repo": "Waven-liner-mod"
+      }
+    ],
     "directories": {
       "output": "release"
     },
@@ -71,7 +77,7 @@
       "artifactName": "WAVEN-${version}.${ext}"
     },
     "win": {
-      "executableName": "waven",
+      "executableName": "WAVEN Music",
       "icon": "build/icon.ico",
       "target": [
         "nsis"
@@ -123,6 +129,7 @@
     "lottie-web": "^5.13.0",
     "meriyah": "7.4.0",
     "morphicons": "^1.7.1",
+    "music-metadata": "^11.16.1",
     "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-apple-emojis": "^3.0.0",

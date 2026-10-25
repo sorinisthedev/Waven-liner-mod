@@ -649,6 +649,7 @@ export class PlayerRuntime {
 
   public async preloadTrack(track: Track): Promise<void> {
     if (this.currentTrackId === track.id) return;
+    if (track.id.startsWith("local:")) return;
     if (this.preloadingTrackId === track.id) return;
 
     const cached = await linerDb.getAudio(track.id);
@@ -694,6 +695,19 @@ export class PlayerRuntime {
 
     this.preloadingPromise = promise;
     await promise;
+  }
+
+  /** saves a song to the audio cache for offline play; true when it's there */
+  public async downloadForOffline(track: Track, signal: AbortSignal): Promise<boolean> {
+    if (track.id.startsWith("local:")) return true;
+    if (await linerDb.getAudio(track.id)) return true;
+    const stream = await resolvePlaybackStream(track, signal);
+    if (signal.aborted) return false;
+    const blob = await this.downloadAudioBlob(stream, signal);
+    if (!blob || signal.aborted) return false;
+    await audioCache.saveAudioBlob(track.id, blob, blob.type || stream.mimeType);
+    await linerDb.putTrack(track);
+    return true;
   }
 
   private pendingStartPositionMs = 0;

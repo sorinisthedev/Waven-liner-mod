@@ -26,6 +26,7 @@ import {
 import { usePageBackdrop } from "@/shared/lib";
 import likesCover from "@/assets/likes-cover.svg";
 import { PinPlaylistButton } from "@/features/pins";
+import { DownloadButton } from "@/features/offline/ui/DownloadButton";
 import { Pic2Line } from "@mingcute/react";
 import { PlaylistIconEditor, PlaylistIconOverlay } from "@/features/playlist-icons";
 import { useAuthStore } from "@/features/auth";
@@ -714,6 +715,14 @@ function LibraryPlaylistContent() {
                         >
                           <Pic2Line size={17} />
                         </Button>
+                      )}
+                      {decodedId && (
+                        <DownloadButton
+                          collectionId={decodedId === "likes" ? "likes" : `playlist:${decodedId}`}
+                          title={viewData.title}
+                          tracks={currentTracks}
+                          className={HERO_GLASS_BUTTON_CLASS}
+                        />
                       )}
                       {decodedId && (
                         <PinPlaylistButton

@@ -29,6 +29,8 @@ import { WallpaperLayer } from "@/features/personalization";
 import { SoundSync } from "@/features/sound";
 import { ListeningLogSync } from "@/features/stats";
 import { CommandLayer } from "@/features/command";
+import { LocalFilesSync } from "@/features/local-files/ui/LocalFilesSync";
+import "@/features/offline/store/offlineStore";
 import { useGlobalShortcuts } from "../hooks/useGlobalShortcuts";
 import { useDisableButtonFocus } from "../hooks/useDisableButtonFocus";
 import { useWindowState } from "../hooks/useWindowState";
@@ -685,6 +687,7 @@ export default function AppFrame({ children }: AppFrameProps) {
       <SoundSync />
       <ListeningLogSync />
       <CommandLayer />
+      <LocalFilesSync />
       <WallpaperLayer rounded={!isEdgeToEdge} />
       <DynamicBlurBackground isDark={isDark} />
 

@@ -60,6 +60,7 @@ import { createSleepBlocker } from "./sleep-blocker.js";
 import { withOpenCors } from "./cors.js";
 import { createShutdown } from "./shutdown.js";
 import { DesktopIntegration } from "./tray.js";
+import { LocalMediaLibrary, registerLocalMediaScheme } from "./localMedia.js";
 import {
   computeDragBounds,
   isInTopSnapZone,
@@ -143,9 +144,20 @@ try {
   console.warn("[WAVEN] could not copy the old Liner 2.0 data:", err);
 }
 
+// your own music files are served through waven-media://, registered before ready
+registerLocalMediaScheme();
+
 // Liner 2.0 is a local build: upstream's OTA bundles and GitHub releases would
 // replace it with stock Liner, so both update channels stay off.
 const REMOTE_UPDATES_ENABLED = false;
+
+// WAVEN's own releases: full installer updates from the WAVEN GitHub repo
+const GITHUB_UPDATES_ENABLED = true;
+const WAVEN_UPDATE_FEED = {
+  provider: "github" as const,
+  owner: "sorinisthedev",
+  repo: "Waven-liner-mod",
+};
 
 // second lock on top of the switch: even if some path tried, upstream's update
 // feeds are refused at the network layer
@@ -167,6 +179,7 @@ let bundleManager: BundleManager | null = null;
 let discordRpcManager: DiscordRpcManager | null = null;
 let poTokenService: PoTokenService | null = null;
 let desktop: DesktopIntegration | null = null;
+let localMedia: LocalMediaLibrary | null = null;
 
 // every helper process we spawn (tracert, icon cache refresh, ...) is tracked so
 // quitting can kill whatever is still running instead of leaving orphans behind
@@ -1521,6 +1534,9 @@ if (!gotTheLock) {
       (listener) => authSessions.onChange(() => listener()),
     );
 
+    localMedia = new LocalMediaLibrary(() => mainWindow);
+    localMedia.registerProtocolHandler();
+
     desktop = new DesktopIntegration({
       getWindow: () => mainWindow,
       sendAction: (type) => {
@@ -1855,6 +1871,7 @@ if (!gotTheLock) {
     );
 
     // updater config: production github releases only, no prereleases or auto-install on close
+    autoUpdater.setFeedURL(WAVEN_UPDATE_FEED);
     autoUpdater.autoDownload = false;
     autoUpdater.autoInstallOnAppQuit = false;
     autoUpdater.allowPrerelease = false;
@@ -1898,7 +1915,7 @@ if (!gotTheLock) {
       if (!app.isPackaged) {
         return { available: false, error: "Updater is disabled in dev mode" };
       }
-      if (!REMOTE_UPDATES_ENABLED) {
+      if (!GITHUB_UPDATES_ENABLED) {
         return { available: false };
       }
       try {
@@ -1926,7 +1943,7 @@ if (!gotTheLock) {
       if (!app.isPackaged) {
         return { success: false, error: "Updater is disabled in dev mode" };
       }
-      if (!REMOTE_UPDATES_ENABLED) {
+      if (!GITHUB_UPDATES_ENABLED) {
         return { success: false, error: "Updates are disabled in Liner 2.0" };
       }
       try {
@@ -1994,17 +2011,21 @@ if (!gotTheLock) {
       };
     });
 
-    // automatic update check after window initialization (packaged app only)
-    if (app.isPackaged && REMOTE_UPDATES_ENABLED) {
-      setTimeout(() => {
+    // automatic update check after window initialization (packaged app only):
+    // at launch, then every 6 hours for people who leave WAVEN open
+    if (app.isPackaged && GITHUB_UPDATES_ENABLED) {
+      const check = () =>
         autoUpdater.checkForUpdates().catch((err) => {
           console.error(
             "\x1b[31m updater \x1b[0m background check error:",
             err?.message || err,
           );
         });
-      }, 4000);
+      setTimeout(check, 4000);
+      setInterval(check, 6 * 60 * 60 * 1000);
+    }
 
+    if (app.isPackaged && REMOTE_UPDATES_ENABLED) {
       // check for OTA bundles every 15 minutes silently in background
       setInterval(
         () => {

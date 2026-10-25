@@ -9,14 +9,7 @@ import { useRecentlyPlayed } from "../hooks/useRecentlyPlayed";
 import { useDailyMixes } from "../hooks/useDailyMixes";
 import { useMostSaved, usePopularAlbums } from "../hooks/useExploreCollections";
 import { useTranslation } from "@/languages";
-import { usePageBackdrop } from "@/shared/lib";
-import {
-  AlbumFill,
-  BookmarkFill,
-  FireFill,
-  TrophyFill,
-  TimeFill,
-} from "@mingcute/react";
+import { useAuthStore } from "@/features/auth/store/authStore";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -30,15 +23,24 @@ export default function HomePage() {
   const { items: mostSaved, isLoading: savedLoading } = useMostSaved();
   const { data: dailyMixes } = useDailyMixes();
   const hasMixes = Boolean(dailyMixes && dailyMixes.length > 0);
-  const firstAlbum = popularAlbums[0];
-  const firstAlbumCover =
-    firstAlbum?.type === "album" ? firstAlbum.item.coverUrl : undefined;
-  usePageBackdrop(
-    dailyMixes?.[0]?.coverUrl ||
-      firstAlbumCover ||
-      listeningNow[0]?.coverUrl ||
-      undefined,
-  );
+  const displayName = useAuthStore((s) => s.user?.displayName?.trim());
+  const [now] = useState(() => new Date());
+  const hour = now.getHours();
+  const greeting =
+    hour >= 5 && hour < 12
+      ? t("home.goodMorning")
+      : hour >= 12 && hour < 17
+        ? t("home.goodAfternoon")
+        : hour >= 17 && hour < 22
+          ? t("home.goodEvening")
+          : t("home.goodNight");
+  const dateLabel = (() => {
+    try {
+      return new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric" }).format(now);
+    } catch {
+      return "";
+    }
+  })();
 
   const isDataLoading =
     tracksLoading ||
@@ -63,55 +65,51 @@ export default function HomePage() {
     <div className="relative h-full w-full overflow-y-auto overflow-x-hidden bg-transparent pt-(--page-inset-top) pb-(--page-inset-bottom)">
       <div className="relative z-1 grid grid-cols-1 items-start w-full">
         {isReady && (
-          <div className="col-start-1 row-start-1 w-full pb-[16px]">
+          <div className="col-start-1 row-start-1 w-full px-3 pb-[28px]">
+            <header className="px-3 pt-[18px]" data-window-drag>
+              <h1 className="m-0 text-[30px] font-[700] leading-tight tracking-[-0.03em] text-text-primary">
+                {greeting}
+                {displayName ? <span className="text-text-tertiary">, {displayName}</span> : null}
+              </h1>
+              {dateLabel && <p className="m-0 mt-[4px] text-[13px] text-text-tertiary">{dateLabel}</p>}
+            </header>
+
             {dailyMixes && hasMixes && (
-              <DailyMixesSection mixes={dailyMixes} headingMarginTop="mt-0" />
+              <DailyMixesSection mixes={dailyMixes} headingMarginTop="mt-[28px]" />
             )}
 
-            {popularAlbums.length > 0 && (
+            {popularAlbums.length >= 3 && (
               <PopularTracksSection
                 title={t("home.popularAlbums")}
-                icon={<AlbumFill className="w-6 h-6 text-emerald-400" />}
                 items={popularAlbums}
-                headingMarginTop={hasMixes ? "mt-[22px]" : "mt-0"}
               />
             )}
 
             {listeningNow.length > 0 && (
               <ListeningNowSection
                 title={t("home.whatEveryonesOn")}
-                icon={<FireFill className="w-6 h-6 text-amber-500" />}
                 tracks={listeningNow}
-                headingMarginTop={
-                  hasMixes || popularAlbums.length > 0 ? "mt-[22px]" : "mt-0"
-                }
               />
             )}
 
             {recentlyPlayed && recentlyPlayed.length > 0 && (
               <PopularTracksSection
                 title={t("home.jumpBackIn")}
-                icon={<TimeFill className="w-6 h-6 text-sky-400" />}
                 items={recentlyPlayed}
-                headingMarginTop="mt-[22px]"
               />
             )}
 
             {popularTracksAllTime && popularTracksAllTime.length > 0 && (
               <PopularTracksSection
                 title={t("home.mostListened")}
-                icon={<TrophyFill className="w-6 h-6 text-yellow-500" />}
                 items={popularTracksAllTime}
-                headingMarginTop="mt-[22px]"
               />
             )}
 
             {mostSaved.length > 0 && (
               <PopularTracksSection
                 title={t("home.mostSaved")}
-                icon={<BookmarkFill className="w-6 h-6 text-rose-400" />}
                 items={mostSaved}
-                headingMarginTop="mt-[22px]"
               />
             )}
 

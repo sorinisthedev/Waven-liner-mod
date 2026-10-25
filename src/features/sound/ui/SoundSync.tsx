@@ -51,9 +51,17 @@ export function SoundSync() {
     };
   }, []);
 
-  // crossfade: fade each song in over its first seconds and out over its last
+  // crossfade: fade each song in over its first seconds and out over its last.
+  // only ticks while crossfade is on and something is playing
+  const crossfadeOn = useSoundStore((s) => s.crossfadeSec > 0);
+  const isPlaying = usePlayerStore((s) => s.status === "playing");
+  const crossfadeActive = crossfadeOn && isPlaying;
   useEffect(() => {
-    let lastLevel = 1;
+    if (!crossfadeActive) {
+      if (!crossfadeOn) pitchShifter.setTransitionGain(1, 0.06);
+      return;
+    }
+    let lastLevel = -1;
     const id = window.setInterval(() => {
       const cf = useSoundStore.getState().crossfadeSec;
       if (!pitchShifter.hasPostChain()) return;
@@ -71,10 +79,12 @@ export function SoundSync() {
       pitchShifter.setTransitionGain(level, 0.06);
     }, 100);
     return () => window.clearInterval(id);
-  }, []);
+  }, [crossfadeActive, crossfadeOn]);
 
-  // sleep timer
+  // sleep timer: only ticks while one is set
+  const sleepArmed = useSleepTimerStore((s) => s.mode !== null);
   useEffect(() => {
+    if (!sleepArmed) return;
     let fadeBase: number | null = null;
     const restoreVolume = () => {
       const audio = liveAudio();
@@ -121,7 +131,7 @@ export function SoundSync() {
       window.clearInterval(id);
       restoreVolume();
     };
-  }, []);
+  }, [sleepArmed]);
 
   // wake-up alarm: resume what was playing, ramping up from silence
   useEffect(() => {

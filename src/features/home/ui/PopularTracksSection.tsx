@@ -405,7 +405,7 @@ function PopularTracksSection({
   badge,
   items,
   showRanks = false,
-  headingMarginTop = "mt-[22px]",
+  headingMarginTop = "mt-[36px]",
   rowClassName = "",
 }: PopularTracksSectionProps) {
   return (

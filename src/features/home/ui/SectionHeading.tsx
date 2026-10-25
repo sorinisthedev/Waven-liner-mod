@@ -1,48 +1,31 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export interface SectionHeadingProps {
   title: string;
   subtitle?: string;
+  /** kept for callers; the minimal home page doesn't draw section icons */
   icon?: ReactNode;
   badge?: ReactNode;
   marginTop?: string;
 }
 
-const headingStyle: CSSProperties = {
-  fontFamily: "var(--font-roboto-flex), sans-serif",
-  fontWeight: 564,
-  fontVariationSettings:
-    "'wght' 564, 'GRAD' 105, 'XOPQ' 100, 'wdth' 134, 'opsz' 144",
-};
-
 export function SectionHeading({
   title,
   subtitle,
-  icon,
   badge,
-  marginTop = "mt-[22px]",
+  marginTop = "mt-[36px]",
 }: SectionHeadingProps) {
   return (
-    <div className={`${marginTop} px-3 flex items-center justify-between`}>
-      <div className="flex flex-col gap-0.5">
-        <div className="flex items-center gap-2.5">
-          {icon && (
-            <div className="flex items-center justify-center shrink-0 w-6 h-6 [&>svg]:w-6 [&>svg]:h-6">
-              {icon}
-            </div>
-          )}
-          <h2
-            className="font-roboto-flex-heading text-text-primary text-[24px] m-0 leading-none tracking-tight"
-            style={headingStyle}
-          >
+    <div className={`${marginTop} px-3 flex items-end justify-between`}>
+      <div className="flex flex-col gap-[3px]">
+        <div className="flex items-center gap-2">
+          <h2 className="m-0 text-[19px] font-[650] leading-tight tracking-[-0.02em] text-text-primary">
             {title}
           </h2>
           {badge}
         </div>
         {subtitle && (
-          <p className="text-[13px] text-text-tertiary m-0 mt-0.5 font-normal">
-            {subtitle}
-          </p>
+          <p className="m-0 text-[13px] font-normal text-text-tertiary">{subtitle}</p>
         )}
       </div>
     </div>

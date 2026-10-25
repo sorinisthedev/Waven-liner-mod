@@ -15,7 +15,7 @@
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-0b0b10?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-111111?style=flat-square">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.2-111111?style=flat-square">
 </p>
 
 <p align="center">
@@ -39,7 +39,7 @@
 - **Your own music files**: add folders from your PC and play your MP3, FLAC, M4A, WAV and OGG files with their covers, next to everything else.
 - **Offline downloads**: download any playlist or album and play it with no internet.
 - **Automatic updates**: WAVEN checks this page for new versions and installs them for you.
-- **Discord status**: shows the song you're playing with its cover, the WAVEN logo and a button to play it on YouTube Music.
+- **Discord status**: shows the song you're playing with its cover, the WAVEN logo, and Listen on WAVEN / Download WAVEN buttons.
 - **Make it yours**: profile picture, app wallpapers (gradients or your own image), accent colors, app and lyrics fonts, and a custom theme builder with import and export.
 - **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, a visualizer, a sleep timer and a wake-up alarm.
 - **Your stats**: minutes listened, top songs and artists, when you listen, a full play history and a shareable Wrapped-style card.
@@ -53,6 +53,43 @@
 </p>
 
 New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven-liner-mod/releases) page.
+
+## Recent changes
+
+**1.1.2**
+- Cleaner, minimal home page: a simple greeting with the date, plain section titles, artwork-only mix covers, no color glow
+- Lower CPU use: crossfade and sleep timer checks only run while you're using them
+
+**1.1.1**
+- Discord status buttons: **Listen on WAVEN** (opens the song in WAVEN for your friends) and **Download WAVEN**
+- WAVEN links use `waven://`, so they never open Liner or other Liner mods
+
+**1.1.0**
+- **Automatic updates** from this page
+- **Your own music files**: add folders from your PC and play MP3, FLAC, M4A, WAV and OGG
+- **Offline downloads** for playlists and albums
+- Discord status shows your song, its cover and the WAVEN logo; fixed Discord thinking WAVEN was the game "Waven"
+
+**1.0.1**
+- Fixed liked songs and playlists not showing without an account
+- Change a playlist's icon from the playlist page or by right-clicking it
+- Liner 2.0 settings, wallpaper and library carry over properly
+
+**1.0**
+- **No account**: no sign-in, everything is saved on your PC, and Liner's servers aren't used
+- Music from YouTube Music and SoundCloud, lyrics from LRCLIB
+- New name and wave logo, redesigned player bar and overlay
+
+### Everything changed from Liner
+- **No account, no Liner servers**: likes, playlists, saved albums and artists, history and your profile live on your PC
+- **Music**: your own music files, offline downloads, daily mixes from your listening, the weekly charts
+- **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, visualizer, sleep timer, wake-up alarm, now-playing notifications
+- **Make it yours**: profile picture, wallpapers, accent colors, custom theme builder, app and lyrics fonts, playlist icons, pinned playlists
+- **Stats**: listening stats, a Wrapped-style card and a full play history
+- **Faster to use**: Ctrl+K command palette, `?` shortcut sheet, close to tray, start with Windows, settings backup and restore
+- **Performance**: a performance mode button, plus background helpers that only run when needed
+- **Updates and sharing**: automatic updates, a Discord status with WAVEN buttons, share links that open in WAVEN
+- **Look**: WAVEN name and logo, redesigned player bar, overlay and home page
 
 ## For developers
 

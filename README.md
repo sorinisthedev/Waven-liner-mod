@@ -10,12 +10,12 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/sorinisthedev/Liner2.0/releases/latest/download/WAVEN-Setup.exe"><img alt="Download WAVEN" src="https://img.shields.io/badge/Download-WAVEN--Setup.exe-111111?style=for-the-badge&logo=windows&logoColor=white"></a>
+  <a href="https://github.com/sorinisthedev/Waven-liner-mod/releases/latest/download/WAVEN-Setup.exe"><img alt="Download WAVEN" src="https://img.shields.io/badge/Download-WAVEN--Setup.exe-111111?style=for-the-badge&logo=windows&logoColor=white"></a>
 </p>
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-0b0b10?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0-111111?style=flat-square">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-111111?style=flat-square">
 </p>
 
 <p align="center">
@@ -26,7 +26,7 @@
 
 ## Install
 
-1. **[Download WAVEN-Setup.exe](https://github.com/sorinisthedev/Liner2.0/releases/latest/download/WAVEN-Setup.exe)** and run it.
+1. **[Download WAVEN-Setup.exe](https://github.com/sorinisthedev/Waven-liner-mod/releases/latest/download/WAVEN-Setup.exe)** and run it.
 2. Open WAVEN from the Start menu and start listening. There's nothing to sign up for.
 3. Coming from Liner 2.0? WAVEN replaces it, keeps your settings, and copies your Liner likes and playlists to your PC the first time it opens.
 
@@ -48,7 +48,7 @@
   <img src=".github/assets/waven-sound.png" alt="Sound settings with the equalizer" width="400">
 </p>
 
-New versions are posted on the [Releases](https://github.com/sorinisthedev/Liner2.0/releases) page.
+New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven-liner-mod/releases) page.
 
 ## For developers
 

@@ -1248,7 +1248,8 @@ if (!gotTheLock) {
           });
           if (nativeSnap) {
             nativeSnap.prime(screen.getPrimaryDisplay());
-            overlayManager?.enablePrewarm(); // the first hand-off to the overlay starts at once
+            // the overlay window is created on first use instead of up front: it holds
+            // ~240 MB, too much to keep around for people who never open it
             return;
           }
         }

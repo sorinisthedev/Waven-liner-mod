@@ -15,7 +15,7 @@
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-0b0b10?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.2-111111?style=flat-square">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.3-111111?style=flat-square">
 </p>
 
 <p align="center">
@@ -55,6 +55,10 @@
 New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven-liner-mod/releases) page.
 
 ## Recent changes
+
+**1.1.3**
+- Much lower CPU use when idle (about 10% down to under 1%): the lyrics tracker only runs while music plays
+- Uses less memory: the floating overlay player only loads the first time you open it
 
 **1.1.2**
 - Cleaner, minimal home page: a simple greeting with the date, plain section titles, artwork-only mix covers, no color glow

@@ -135,8 +135,11 @@ export function useTouchBarSync() {
     return cleanup;
   }, [currentTrack, isLiked, likeMutation, unlikeMutation, navigate, location.pathname]);
 
+  // active lyric line tracking. it used to run on every animation frame
+  // (~180/s, even paused); now it ticks 20/s and only while music plays, plus
+  // one pass whenever playback stops so the line is still right after seeking
+  const syncPlaying = usePlayerStore((s) => s.status === "playing");
   useEffect(() => {
-    let rafId: number;
     let lastCalculatedIdx = -1;
 
     const syncLoop = () => {
@@ -172,12 +175,13 @@ export function useTouchBarSync() {
         }
       }
 
-      rafId = requestAnimationFrame(syncLoop);
     };
 
-    rafId = requestAnimationFrame(syncLoop);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
+    syncLoop();
+    if (!syncPlaying) return;
+    const timer = window.setInterval(syncLoop, 50);
+    return () => window.clearInterval(timer);
+  }, [syncPlaying]);
 
   useEffect(() => {
     if (!window.linerElectron?.touchbarUpdateState) return;

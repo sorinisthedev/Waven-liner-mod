@@ -218,6 +218,17 @@ const isHyprland = Boolean(
   process.env.XDG_SESSION_DESKTOP?.toLowerCase().includes("hyprland"),
 );
 
+// deeplinks that arrive before the renderer subscribes wait here
+const deeplinkListeners = new Set<(target: DeeplinkTarget) => void>();
+const queuedDeeplinks: DeeplinkTarget[] = [];
+ipcRenderer.on("deeplink:open", (_event: unknown, target: DeeplinkTarget) => {
+  if (deeplinkListeners.size === 0) {
+    queuedDeeplinks.push(target);
+    return;
+  }
+  for (const cb of deeplinkListeners) cb(target);
+});
+
 const api: LinerElectronApi = {
   platform: process.platform,
   isHyprland,
@@ -362,10 +373,12 @@ const api: LinerElectronApi = {
     };
   },
   onDeeplink: (cb) => {
-    const listener = (_event: unknown, target: DeeplinkTarget) => cb(target);
-    ipcRenderer.on("deeplink:open", listener);
+    deeplinkListeners.add(cb);
+    // a cold-start link can land before the app subscribes, hand it over now
+    const queued = queuedDeeplinks.splice(0);
+    for (const target of queued) cb(target);
     return () => {
-      ipcRenderer.removeListener("deeplink:open", listener);
+      deeplinkListeners.delete(cb);
     };
   },
   touchbarUpdateState: (state) => {

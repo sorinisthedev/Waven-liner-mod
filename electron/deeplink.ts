@@ -13,10 +13,12 @@ const DEEP_LINK_IDS: Record<string, RegExp> = {
   playlist: /^[A-Za-z0-9_-]{8,64}$/,
   // youtube video ids are always 11 base64url chars
   track: /^[A-Za-z0-9_-]{11}$/,
+  // shared playlists: version prefix + compressed base64url song list
+  import: /^1\.[A-Za-z0-9_-]{4,40000}$/,
 };
 
 export interface DeeplinkTarget {
-  type: "artist" | "album" | "playlist" | "track";
+  type: "artist" | "album" | "playlist" | "track" | "import";
   id: string;
 }
 

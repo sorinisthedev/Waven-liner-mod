@@ -5,6 +5,7 @@ import {
   GridLine,
   GridFill,
   ListCheckLine,
+  FileImportLine,
   ListCheckFill,
 } from "@mingcute/react";
 import Button from "@/shared/ui/Button";
@@ -24,6 +25,7 @@ interface LibraryControlsProps {
   onViewModeChange: (mode: LibraryViewMode) => void;
   /** shown only when provided (playlist tabs) */
   onCreatePlaylist?: () => void;
+  onImportPlaylist?: () => void;
 }
 
 export default function LibraryControls({
@@ -33,6 +35,7 @@ export default function LibraryControls({
   viewMode,
   onViewModeChange,
   onCreatePlaylist,
+  onImportPlaylist,
 }: LibraryControlsProps) {
   const { t } = useTranslation();
 
@@ -111,6 +114,17 @@ export default function LibraryControls({
           <ListCheckLine size={16} />
         )}
       </Button>
+      {onImportPlaylist && (
+        <Button
+          variant="secondary"
+          onClick={onImportPlaylist}
+          className={`${HERO_BUTTON_CLASS} px-[14px]`}
+          title={t("playlist_share.import_file")}
+        >
+          <FileImportLine size={16} />
+          <span>{t("playlist_share.import_file")}</span>
+        </Button>
+      )}
       {onCreatePlaylist && (
         <Button
           variant="primary"

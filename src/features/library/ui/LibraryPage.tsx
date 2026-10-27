@@ -1,3 +1,4 @@
+import { pickPlaylistFile } from "@/features/playlist-share/ui/PlaylistShareDialogs";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -410,6 +411,7 @@ export default function LibraryPage() {
               viewMode={viewMode}
               onViewModeChange={handleViewModeChange}
               onCreatePlaylist={showsPlaylists ? () => openCreatePlaylist() : undefined}
+              onImportPlaylist={showsPlaylists ? pickPlaylistFile : undefined}
             />
           </div>
         </div>

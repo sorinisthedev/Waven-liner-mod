@@ -15,7 +15,7 @@
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-0b0b10?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.3-111111?style=flat-square">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.4-111111?style=flat-square">
 </p>
 
 <p align="center">
@@ -43,6 +43,7 @@
 - **Make it yours**: profile picture, app wallpapers (gradients or your own image), accent colors, app and lyrics fonts, and a custom theme builder with import and export.
 - **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, a visualizer, a sleep timer and a wake-up alarm.
 - **Your stats**: minutes listened, top songs and artists, when you listen, a full play history and a shareable Wrapped-style card.
+- **Share playlists**: send a link and friends add the whole playlist to their WAVEN in one click.
 - **Faster to use**: a Ctrl+K command palette, a `?` shortcut sheet, pinned playlists in the sidebar and custom playlist icons.
 - **Performance mode**: one click turns off blur and motion to cut CPU, GPU and memory use.
 - **Desktop extras**: close to tray, start with Windows, desktop now-playing alerts and settings backup and restore.
@@ -55,6 +56,11 @@
 New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven-liner-mod/releases) page.
 
 ## Recent changes
+
+**1.1.4**
+- **Share playlists**: press Share on any playlist (or your liked songs) and send the link. Friends click it, press **Add to WAVEN**, and the playlist lands in their library with every song. No account or server needed
+- Very big playlists can be saved as a small `.wavenplaylist` file instead; friends add it with **Import** in the Library
+- The share page shows the playlist name, song count and cover, with a link to play it on YouTube if they don't have WAVEN yet
 
 **1.1.3**
 - Much lower CPU use when idle (about 10% down to under 1%): the lyrics tracker only runs while music plays
@@ -92,7 +98,7 @@ New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven
 - **Stats**: listening stats, a Wrapped-style card and a full play history
 - **Faster to use**: Ctrl+K command palette, `?` shortcut sheet, close to tray, start with Windows, settings backup and restore
 - **Performance**: a performance mode button, plus background helpers that only run when needed
-- **Updates and sharing**: automatic updates, a Discord status with WAVEN buttons, share links that open in WAVEN
+- **Updates and sharing**: automatic updates, a Discord status with WAVEN buttons, share links that open in WAVEN, playlist sharing by link or file
 - **Look**: WAVEN name and logo, redesigned player bar, overlay and home page
 
 ## For developers

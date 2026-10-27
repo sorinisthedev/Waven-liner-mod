@@ -43,7 +43,8 @@ import {
 } from "@mingcute/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LuPencil, LuTrash2, LuText, LuShuffle } from "react-icons/lu";
-import { buildShareUrl } from "@/shared/utils/share";
+import { isShareableTrackId } from "@/shared/local/playlistShare";
+import { usePlaylistShareStore } from "@/features/playlist-share/store/shareStore";
 import Button from "@/shared/ui/Button";
 import DropdownMenu from "@/shared/ui/DropdownMenu";
 import SongCardWithMenu from "@/features/player/ui/SongCardWithMenu";
@@ -293,14 +294,17 @@ function LibraryPlaylistContent() {
   }, [sortedTracks, viewData, toast, t]);
 
   const handleShare = useCallback(() => {
-    if (typeof navigator !== "undefined" && navigator.clipboard && decodedId) {
-      navigator.clipboard.writeText(buildShareUrl("playlist", decodedId));
-      void api.updatePlaylist(decodedId, { isPublic: true }).catch(() => {});
-      toast(t("common.link_copied"), "checkmark", {
-        description: viewData?.title || undefined,
-      });
+    if (!viewData) return;
+    const ids = currentTracks.map((track) => track.id);
+    const shareable = ids.filter(isShareableTrackId);
+    if (!shareable.length) {
+      toast(t("playlist_share.nothing_to_share"), "error");
+      return;
     }
-  }, [decodedId, viewData?.title, toast, t]);
+    usePlaylistShareStore
+      .getState()
+      .openShare({ title: viewData.title || t("playlist_share.default_title"), ids: shareable }, ids.length - shareable.length);
+  }, [currentTracks, viewData, toast, t]);
 
   const handleReorderCommit = useCallback(
     (fromIndex: number, toIndex: number, movingTrack: Track) => {
@@ -777,6 +781,16 @@ function LibraryPlaylistContent() {
                         sort={sort}
                         disabled={currentTracks.length < 2}
                       />
+                      <Button
+                          variant="secondary"
+                          onClick={handleShare}
+                          disabled={currentTracks.length === 0}
+                          data-testid="playlist-share"
+                          className={`${HERO_BUTTON_CLASS} ${HERO_GLASS_BUTTON_CLASS} !w-[52px] !p-0 text-text-primary`}
+                          title={t("common.share")}
+                        >
+                          <ShareForwardLine size={18} />
+                        </Button>
                       {!isLikesMode && (
                         <DropdownMenu
                           trigger={

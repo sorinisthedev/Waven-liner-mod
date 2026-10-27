@@ -38,6 +38,15 @@ describe("parseDeeplink", () => {
     expect(parseDeeplink("not a url")).toBeNull();
   });
 
+  it("accepts shared playlist links", () => {
+    expect(parseDeeplink("waven://import?id=1.q1ZKLEnMS8nPS1WyUlA6vNQkJSMzJ01JRwko")).toEqual({
+      type: "import",
+      id: "1.q1ZKLEnMS8nPS1WyUlA6vNQkJSMzJ01JRwko",
+    });
+    expect(parseDeeplink("waven://import?id=2.abcdef")).toBeNull();
+    expect(parseDeeplink("waven://import?id=1.ab%2Fcd")).toBeNull();
+  });
+
   it("finds the deeplink arg anywhere in argv", () => {
     expect(
       findDeeplinkArg(["/usr/bin/liner", "waven://track?id=RGdkabupfPI"]),

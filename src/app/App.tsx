@@ -12,6 +12,7 @@ import { useOverlaySync } from "@/features/overlay";
 import { useDiscordSync } from "@/features/discord";
 import { AppRoutes } from "./routes";
 import DeeplinkHandler from "./DeeplinkHandler";
+import PlaylistShareDialogs from "@/features/playlist-share/ui/PlaylistShareDialogs";
 import EnvironmentWarning from "./EnvironmentWarning";
 import { ConnectivityWall } from "@/features/connectivity";
 import { PersonalizationSync, PerformanceMotionConfig } from "@/features/personalization";
@@ -73,6 +74,7 @@ export default function App() {
               <RootErrorBoundary>
                 <WindowAnimationContainer>
                   <DeeplinkHandler />
+                  <PlaylistShareDialogs />
                   <EnvironmentWarning />
                   <ConnectivityWall />
                   <AuthLock>

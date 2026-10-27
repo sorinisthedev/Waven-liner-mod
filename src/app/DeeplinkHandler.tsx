@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, toClientTrack } from "@/shared/api";
 import { playerEngine } from "@/features/player";
+import { usePlaylistShareStore } from "@/features/playlist-share/store/shareStore";
+import { decodeSharedPlaylist } from "@/shared/local/playlistShare";
 
 interface DeeplinkTarget {
-  type: "artist" | "album" | "playlist" | "track";
+  type: "artist" | "album" | "playlist" | "track" | "import";
   id: string;
 }
 
@@ -33,6 +35,9 @@ export default function DeeplinkHandler() {
               break;
             case "playlist":
               navigate(`/collection?type=playlist&id=${encodeURIComponent(target.id)}`);
+              break;
+            case "import":
+              usePlaylistShareStore.getState().openImport(await decodeSharedPlaylist(target.id));
               break;
             case "track": {
               const track = toClientTrack(await api.getTrack(target.id));

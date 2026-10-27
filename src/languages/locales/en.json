@@ -1312,5 +1312,27 @@
     "started": "Downloading {title}…",
     "finished": "{title} is ready to play offline",
     "removed": "Removed the download of {title}"
+  },
+  "playlist_share": {
+    "share_title": "Share playlist",
+    "share_subtitle": "{title} · {count} songs",
+    "share_explain": "Send this link to a friend. When they open it in WAVEN, the playlist is added to their library with every song.",
+    "skipped_local": "{count} of your own music files can't be shared and were left out.",
+    "too_long": "This playlist is too big for one Discord message. Save it as a file and send that instead.",
+    "copy_link": "Copy link",
+    "copied": "Copied",
+    "link_copied": "Playlist link copied",
+    "save_file": "Save as file",
+    "file_saved": "Playlist file saved to Downloads",
+    "import_title": "Add shared playlist?",
+    "import_subtitle": "{count} songs",
+    "import_button": "Add to library",
+    "importing": "Finding songs… {done} / {total}",
+    "imported": "Added {count} songs",
+    "imported_some": "Added {added} songs, {failed} couldn't be found",
+    "import_failed": "Couldn't add this playlist. Check your internet and try again.",
+    "import_file": "Import",
+    "nothing_to_share": "There are no songs to share in this playlist",
+    "default_title": "Shared playlist"
   }
 }

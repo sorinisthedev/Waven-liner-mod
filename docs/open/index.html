@@ -85,6 +85,7 @@
       var types = { track: /^[A-Za-z0-9_-]{11}$/, album: /^MPRE[A-Za-z0-9_-]{4,64}$/, artist: /^UC[A-Za-z0-9_-]{22}$/, playlist: /^[A-Za-z0-9_-]{8,64}$/ };
       var type = params.get("type") || "track";
       var id = params.get("id") || "";
+      if (type === "import") return showSharedPlaylist(params.get("d") || "");
       if (!types[type] || !types[type].test(id)) return;
 
       var title = (params.get("t") || "").slice(0, 100);
@@ -117,6 +118,41 @@
       // try once automatically; the browser asks before opening WAVEN
       setTimeout(function () { location.href = deeplink; }, 600);
     })();
+
+    // shared playlists carry their songs inside the link, no server involved
+    function showSharedPlaylist(data) {
+      if (!/^1\.[A-Za-z0-9_-]{4,40000}$/.test(data)) return;
+      var deeplink = "waven://import?id=" + data;
+      document.getElementById("open").href = deeplink;
+      document.getElementById("open").textContent = "Add to WAVEN";
+      document.getElementById("title").textContent = "Shared playlist";
+      document.getElementById("subtitle").textContent = "Open it in WAVEN to add it to your library.";
+      try {
+        var b64 = data.slice(2).replace(/-/g, "+").replace(/_/g, "/");
+        var bin = atob(b64 + "===".slice((b64.length + 3) % 4));
+        var bytes = Uint8Array.from(bin, function (c) { return c.charCodeAt(0); });
+        var input = new ReadableStream({ start: function (c) { c.enqueue(bytes); c.close(); } });
+        new Response(input.pipeThrough(new DecompressionStream("deflate-raw"))).text().then(function (text) {
+          var p = JSON.parse(text);
+          var ids = Array.isArray(p.i) ? p.i.filter(function (x) { return typeof x === "string"; }) : [];
+          var name = typeof p.t === "string" && p.t.trim() ? p.t.trim().slice(0, 100) : "Shared playlist";
+          document.getElementById("title").textContent = name;
+          document.getElementById("subtitle").textContent = ids.length + (ids.length === 1 ? " song" : " songs") + " · open it in WAVEN to add it to your library";
+          document.title = name + " | WAVEN";
+          var yt = ids.filter(function (x) { return /^[A-Za-z0-9_-]{11}$/.test(x); });
+          if (yt.length) {
+            var cover = document.getElementById("cover");
+            cover.src = "https://i.ytimg.com/vi/" + yt[0] + "/hqdefault.jpg";
+            cover.onload = function () { cover.style.display = "block"; };
+            var web = document.getElementById("web");
+            web.href = "https://www.youtube.com/watch_videos?video_ids=" + yt.slice(0, 50).join(",");
+            web.textContent = "Play it on YouTube instead";
+            web.hidden = false;
+          }
+        }).catch(function () {});
+      } catch (e) {}
+      setTimeout(function () { location.href = deeplink; }, 600);
+    }
   </script>
 </body>
 </html>

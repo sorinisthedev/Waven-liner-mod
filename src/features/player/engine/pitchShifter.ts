@@ -522,6 +522,12 @@ export class PitchShifterController {
     }
   }
 
+  /** sends the web-audio graph to a chosen output device ("" = system default) */
+  public setSinkId(deviceId: string): Promise<void> {
+    const ctx = this.context as (AudioContext & { setSinkId?: (id: string) => Promise<void> }) | null;
+    return ctx?.setSinkId ? ctx.setSinkId(deviceId) : Promise.resolve();
+  }
+
   /** routes playback through the post chain, attaching the web-audio graph if needed */
   public ensurePostChain(): boolean {
     if (!this.isConnected) {

@@ -18,6 +18,11 @@ export interface SoundSettings {
   /** seconds songs fade out at the end and in at the start, 0 = off */
   crossfadeSec: number;
   visualizer: boolean;
+  /** no effects processing at all, audio goes straight to the speakers */
+  pureMode: boolean;
+  showQualityBadge: boolean;
+  /** "" means the Windows default */
+  outputDeviceId: string;
 }
 
 export const CROSSFADE_MAX_SEC = 12;
@@ -31,6 +36,9 @@ export const DEFAULT_SOUND: SoundSettings = {
   karaoke: false,
   crossfadeSec: 0,
   visualizer: true,
+  pureMode: false,
+  showQualityBadge: true,
+  outputDeviceId: "",
 };
 
 interface SoundState extends SoundSettings {
@@ -42,6 +50,9 @@ interface SoundState extends SoundSettings {
   setKaraoke: (enabled: boolean) => void;
   setCrossfadeSec: (sec: number) => void;
   setVisualizer: (enabled: boolean) => void;
+  setPureMode: (enabled: boolean) => void;
+  setShowQualityBadge: (enabled: boolean) => void;
+  setOutputDeviceId: (id: string) => void;
 }
 
 const clampDb = (v: number) =>
@@ -66,29 +77,37 @@ export const useSoundStore = create<SoundState>()(
   persist(
     (set) => ({
       ...DEFAULT_SOUND,
-      setEqEnabled: (eqEnabled) => set({ eqEnabled }),
+      setEqEnabled: (eqEnabled) => set(eqEnabled ? { eqEnabled, pureMode: false } : { eqEnabled }),
       applyEqPreset: (presetId) => {
         const preset = findEqPreset(presetId);
         if (!preset) return;
-        set({ eqPresetId: preset.id, eqGains: [...preset.gains], eqEnabled: true });
+        set({ eqPresetId: preset.id, eqGains: [...preset.gains], eqEnabled: true, pureMode: false });
       },
       setEqBand: (index, gainDb) =>
         set((s) => {
           if (index < 0 || index >= EQ_BAND_COUNT) return s;
           const eqGains = [...s.eqGains];
           eqGains[index] = clampDb(gainDb);
-          return { eqGains, eqPresetId: "custom", eqEnabled: true };
+          return { eqGains, eqPresetId: "custom", eqEnabled: true, pureMode: false };
         }),
       setNotifyOnTrackChange: (notifyOnTrackChange) => set({ notifyOnTrackChange }),
-      setLeveling: (leveling) => set({ leveling }),
-      setKaraoke: (karaoke) => set({ karaoke }),
-      setCrossfadeSec: (sec) =>
-        set({
-          crossfadeSec: Math.round(
-            Math.min(CROSSFADE_MAX_SEC, Math.max(0, Number.isFinite(sec) ? sec : 0)),
-          ),
-        }),
-      setVisualizer: (visualizer) => set({ visualizer }),
+      setLeveling: (leveling) => set(leveling ? { leveling, pureMode: false } : { leveling }),
+      setKaraoke: (karaoke) => set(karaoke ? { karaoke, pureMode: false } : { karaoke }),
+      setCrossfadeSec: (sec) => {
+        const crossfadeSec = Math.round(
+          Math.min(CROSSFADE_MAX_SEC, Math.max(0, Number.isFinite(sec) ? sec : 0)),
+        );
+        set(crossfadeSec > 0 ? { crossfadeSec, pureMode: false } : { crossfadeSec });
+      },
+      setVisualizer: (visualizer) => set(visualizer ? { visualizer, pureMode: false } : { visualizer }),
+      setPureMode: (pureMode) =>
+        set(
+          pureMode
+            ? { pureMode, eqEnabled: false, leveling: false, karaoke: false, crossfadeSec: 0, visualizer: false }
+            : { pureMode },
+        ),
+      setShowQualityBadge: (showQualityBadge) => set({ showQualityBadge }),
+      setOutputDeviceId: (outputDeviceId) => set({ outputDeviceId }),
     }),
     {
       name: "liner_sound_v1",
@@ -102,6 +121,9 @@ export const useSoundStore = create<SoundState>()(
         karaoke: s.karaoke,
         crossfadeSec: s.crossfadeSec,
         visualizer: s.visualizer,
+        pureMode: s.pureMode,
+        showQualityBadge: s.showQualityBadge,
+        outputDeviceId: s.outputDeviceId,
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<SoundSettings>;
@@ -129,6 +151,13 @@ export const useSoundStore = create<SoundState>()(
               : DEFAULT_SOUND.crossfadeSec,
           visualizer:
             typeof p.visualizer === "boolean" ? p.visualizer : DEFAULT_SOUND.visualizer,
+          pureMode: typeof p.pureMode === "boolean" ? p.pureMode : DEFAULT_SOUND.pureMode,
+          showQualityBadge:
+            typeof p.showQualityBadge === "boolean" ? p.showQualityBadge : DEFAULT_SOUND.showQualityBadge,
+          outputDeviceId:
+            typeof p.outputDeviceId === "string" && p.outputDeviceId.length < 300
+              ? p.outputDeviceId
+              : DEFAULT_SOUND.outputDeviceId,
         };
       },
     },

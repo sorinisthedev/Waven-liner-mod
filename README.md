@@ -15,7 +15,7 @@
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-0b0b10?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.5-111111?style=flat-square">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.6-111111?style=flat-square">
 </p>
 
 <p align="center">
@@ -36,11 +36,12 @@
 
 - **No account**: likes, playlists, saved albums and artists, and your history are stored on your PC. Back them up to a file from Settings.
 - **Search and play anything** from YouTube Music and SoundCloud, with albums, artists, song radio, daily mixes and the weekly charts.
-- **Your own music files**: add folders from your PC and play your MP3, FLAC, M4A, WAV and OGG files with their covers, next to everything else.
+- **Your own music files**: add folders from your PC and play your MP3, FLAC, M4A, WAV, AIFF and OGG files with their covers, next to everything else.
 - **Offline downloads**: download any playlist or album and play it with no internet.
 - **Automatic updates**: WAVEN checks this page for new versions and installs them for you.
 - **Discord status**: shows the song you're playing with its cover, the WAVEN logo, and Listen on WAVEN / Download WAVEN buttons.
 - **Make it yours**: profile picture, app wallpapers (gradients or your own image), accent colors, app and lyrics fonts, and a custom theme builder with import and export.
+- **Hi-Fi**: a quality badge on every song, Best / Balanced / Data saver streaming, an output device picker and Pure mode for untouched FLAC and WAV playback.
 - **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, a visualizer, a sleep timer and a wake-up alarm.
 - **Your stats**: minutes listened, top songs and artists, when you listen, a full play history and a shareable Wrapped-style card.
 - **Import playlists** from Spotify, YouTube, Apple Music, Deezer and SoundCloud by pasting a link.
@@ -57,6 +58,13 @@
 New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven-liner-mod/releases) page.
 
 ## Recent changes
+
+**1.1.6: Hi-Fi pack**
+- **Quality badge** next to the song title shows what's playing, like `OPUS 160` or a gold `FLAC 24/96` for lossless files
+- **Streaming quality**: Best, Balanced or Data saver (Settings → Sound)
+- **Output device**: send WAVEN to specific headphones, speakers or a DAC without changing the Windows default
+- **Pure mode**: turns off every effect so audio goes straight to your speakers untouched
+- **AIFF files** now play from your music folders (along with MP3, FLAC, M4A, WAV and OGG)
 
 **1.1.5**
 - **Import playlists** from Spotify, YouTube, Apple Music, Deezer and SoundCloud: press **Import** in the Library and paste the link. WAVEN finds every song and builds the playlist for you
@@ -98,6 +106,7 @@ New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven
 ### Everything changed from Liner
 - **No account, no Liner servers**: likes, playlists, saved albums and artists, history and your profile live on your PC
 - **Music**: your own music files, offline downloads, daily mixes from your listening, the weekly charts
+- **Hi-Fi**: a quality badge on every song, Best / Balanced / Data saver streaming, an output device picker and Pure mode for untouched FLAC and WAV playback.
 - **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, visualizer, sleep timer, wake-up alarm, now-playing notifications
 - **Make it yours**: profile picture, wallpapers, accent colors, custom theme builder, app and lyrics fonts, playlist icons, pinned playlists
 - **Stats**: listening stats, a Wrapped-style card and a full play history

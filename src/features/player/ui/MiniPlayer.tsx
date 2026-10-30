@@ -36,6 +36,7 @@ import { usePlayerStore } from "../store/playerStore";
 import { toVolumeGain, toVolumeLevel } from "../engine/volume";
 import { VolumeColumn } from "./VolumeColumn";
 import { SpeedPitchPicker } from "./SpeedPitchPicker";
+import { QualityBadge } from "./QualityBadge";
 import { TimelineSlider } from "./TimelineSlider";
 import { useTheme } from "next-themes";
 import { useCoverReady, CoverImage } from "@/features/covers";
@@ -832,6 +833,7 @@ function MiniPlayer({
                 >
                   {trackTitle}
                 </span>
+                <QualityBadge trackId={player.currentTrack?.id} />
               </p>
               <p
                 className="m-0 mt-[4px] flex min-w-0 items-center gap-[5px] text-[13px] font-[300] text-text-tertiary pointer-events-none"

@@ -15,6 +15,7 @@ import {
   useSoundStore,
 } from "@/features/sound";
 import { SettingBlock, SettingRow, SettingSection } from "../controls";
+import { AudioQualitySection } from "./AudioQualitySection";
 
 const font = { fontFamily: "var(--font-inter), sans-serif" } as const;
 
@@ -196,6 +197,7 @@ export function SoundTab({ searchQuery }: { searchQuery?: string }) {
 
   return (
     <div className="flex flex-col gap-[18px]">
+      <AudioQualitySection searchQuery={searchQuery} />
       <SettingSection label={t("settings.sound.eq_section")}>
         <SettingRow
           title={t("settings.sound.eq_title")}

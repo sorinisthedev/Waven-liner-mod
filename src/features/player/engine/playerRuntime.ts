@@ -7,6 +7,7 @@ import { isStandaloneAudioFile } from "@/shared/storage/audioFormat";
 import type { Track } from "@/shared/types";
 import { pitchShifter } from "./pitchShifter";
 import { resolvePlaybackStream, type PlaybackStream } from "./streamResolver";
+import { codecFromMime, publishStreamInfo, useStreamInfoStore } from "../store/streamInfoStore";
 import {
   downloadAudioBytes,
   isBotCheckError,
@@ -785,6 +786,7 @@ export class PlayerRuntime {
 
     store.setStatus("loading", null);
     store.setPosition(startPositionMs > 0 ? startPositionMs : 0);
+    useStreamInfoStore.getState().setInfo(null);
 
     this.pauseForTransition();
 
@@ -858,6 +860,13 @@ export class PlayerRuntime {
           "playback",
           `started (cached): ${track.title} in ${audioStartLatencyMs}ms`,
         );
+        const seconds = this.audio.duration;
+        publishStreamInfo(
+          track.id,
+          codecFromMime(cachedAudio.blob.type),
+          Number.isFinite(seconds) && seconds > 0 ? (cachedAudio.blob.size * 8) / seconds : 0,
+          "saved",
+        );
         return;
       }
 
@@ -899,6 +908,7 @@ export class PlayerRuntime {
         "playback",
         `stream attached: ${streamCodec} ${streamBitrate} bps (${track.title})`,
       );
+      publishStreamInfo(track.id, streamCodec || codecFromMime(stream.mimeType), streamBitrate, "stream");
 
       if (this.audio.readyState < 3) {
         await new Promise<void>((resolve) => {

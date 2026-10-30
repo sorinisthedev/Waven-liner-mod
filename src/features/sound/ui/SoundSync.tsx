@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { playerEngine, usePlayerStore } from "@/features/player";
 import { pitchShifter } from "@/features/player/engine/pitchShifter";
+import { setAudioQualityPreference } from "@/shared/youtube/innertube/innertubeAudioFormats";
 import { useTranslation } from "@/languages";
 import { showToast } from "@/shared/ui";
 import { effectiveEqGains, needsPostChain, useSoundStore } from "../store/soundStore";
@@ -50,6 +51,34 @@ export function SoundSync() {
       unsubPlayer();
     };
   }, []);
+
+  // streaming quality picks which youtube stream gets requested
+  useEffect(() => {
+    const apply = (quality: string) =>
+      setAudioQualityPreference(quality === "low" ? "saver" : quality === "standard" ? "balanced" : "best");
+    apply(usePlayerStore.getState().audioQuality);
+    return usePlayerStore.subscribe((s, prev) => {
+      if (s.audioQuality !== prev.audioQuality) apply(s.audioQuality);
+    });
+  }, []);
+
+  // output device: the audio element and, once it exists, the effects graph
+  const outputDeviceId = useSoundStore((s) => s.outputDeviceId);
+  useEffect(() => {
+    const apply = () => {
+      const audio = liveAudio() as (HTMLAudioElement & { setSinkId?: (id: string) => Promise<void> }) | null;
+      const fallback = () => {
+        void audio?.setSinkId?.("").catch(() => {});
+        void pitchShifter.setSinkId("").catch(() => {});
+      };
+      void audio?.setSinkId?.(outputDeviceId).catch(fallback);
+      void pitchShifter.setSinkId(outputDeviceId).catch(fallback);
+    };
+    apply();
+    return usePlayerStore.subscribe((s, prev) => {
+      if (s.status === "playing" && prev.status !== "playing") apply();
+    });
+  }, [outputDeviceId]);
 
   // crossfade: fade each song in over its first seconds and out over its last.
   // only ticks while crossfade is on and something is playing

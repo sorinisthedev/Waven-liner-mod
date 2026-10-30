@@ -19,7 +19,19 @@ export interface ResolvedAudioStream {
   contentLength?: number;
 }
 
-const PREFERRED_ITAGS = [251, 140, 250, 249, 139];
+export type AudioQualityPreference = "best" | "balanced" | "saver";
+
+// 251 opus ~160k, 140 aac 128k, 250 opus ~70k, 249 opus ~50k, 139 aac 48k
+const ITAG_ORDER: Record<AudioQualityPreference, number[]> = {
+  best: [251, 140, 250, 249, 139],
+  balanced: [250, 140, 251, 249, 139],
+  saver: [249, 139, 250, 140, 251],
+};
+let qualityPreference: AudioQualityPreference = "best";
+
+export function setAudioQualityPreference(preference: AudioQualityPreference) {
+  qualityPreference = preference;
+}
 
 function toAudioFormat(raw: unknown): AudioFormat | null {
   const format = asRecord(raw);
@@ -67,12 +79,15 @@ export function selectBestAudioFormat(
 ): AudioFormat | null {
   if (formats.length === 0) return null;
   const order =
-    preferredCodec === "aac" ? [140, 139, 251, 250, 249] : PREFERRED_ITAGS;
+    preferredCodec === "aac" && qualityPreference === "best"
+      ? [140, 139, 251, 250, 249]
+      : ITAG_ORDER[qualityPreference];
   for (const itag of order) {
     const match = formats.find((format) => format.itag === itag);
     if (match) return match;
   }
-  return [...formats].sort((a, b) => b.bitrate - a.bitrate)[0] ?? null;
+  const byBitrate = [...formats].sort((a, b) => b.bitrate - a.bitrate);
+  return (qualityPreference === "best" ? byBitrate[0] : byBitrate[byBitrate.length - 1]) ?? null;
 }
 
 function expiryFromUrl(url: string): string | null {

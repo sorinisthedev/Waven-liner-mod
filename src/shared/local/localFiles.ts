@@ -31,6 +31,11 @@ export interface LocalTrackInfo {
   album: string;
   durationMs: number;
   hasCover: boolean;
+  codec?: string;
+  lossless?: boolean;
+  sampleRate?: number;
+  bitsPerSample?: number;
+  bitrate?: number;
 }
 
 export function toClientLocalTrack(info: LocalTrackInfo): Track {
@@ -53,6 +58,12 @@ export function registerLocalTracks(infos: LocalTrackInfo[]) {
   for (const info of infos) registry.set(toLocalTrackId(info.path), info);
 }
 
+export function localTrackFormat(
+  id: string,
+): Pick<LocalTrackInfo, "codec" | "lossless" | "sampleRate" | "bitsPerSample" | "bitrate"> | undefined {
+  return registry.get(id);
+}
+
 export function localApiTrack(id: string): ApiTrack | undefined {
   const info = registry.get(id);
   if (!info) return undefined;
@@ -69,7 +80,7 @@ export function localApiTrack(id: string): ApiTrack | undefined {
 export function localMimeType(filePath: string): string {
   const ext = filePath.slice(filePath.lastIndexOf(".")).toLowerCase();
   return (
-    { ".mp3": "audio/mpeg", ".m4a": "audio/mp4", ".aac": "audio/aac", ".flac": "audio/flac", ".wav": "audio/wav", ".webm": "audio/webm" }[ext] ??
+    { ".mp3": "audio/mpeg", ".m4a": "audio/mp4", ".aac": "audio/aac", ".flac": "audio/flac", ".wav": "audio/wav", ".webm": "audio/webm", ".aif": "audio/wav", ".aiff": "audio/wav", ".aifc": "audio/wav" }[ext] ??
     "audio/ogg"
   );
 }

@@ -21,7 +21,12 @@ const AUDIO_EXT = new Map<string, string>([
   [".oga", "audio/ogg"],
   [".opus", "audio/ogg"],
   [".webm", "audio/webm"],
+  // chromium can't decode aiff, these are turned into wav while serving
+  [".aif", "audio/wav"],
+  [".aiff", "audio/wav"],
+  [".aifc", "audio/wav"],
 ]);
+const AIFF_EXT = new Set([".aif", ".aiff", ".aifc"]);
 const MAX_DEPTH = 10;
 const MAX_FILES = 20000;
 
@@ -34,6 +39,11 @@ export interface LocalTrackInfo {
   hasCover: boolean;
   mtimeMs: number;
   size: number;
+  codec?: string;
+  lossless?: boolean;
+  sampleRate?: number;
+  bitsPerSample?: number;
+  bitrate?: number;
 }
 
 interface StoredState {
@@ -119,6 +129,7 @@ export class LocalMediaLibrary {
   }
 
   private serveFile(target: string, range: string | null): Response {
+    if (AIFF_EXT.has(path.extname(target).toLowerCase())) return serveBuffer(aiffAsWav(target), "audio/wav", range);
     const stat = fs.statSync(target);
     const type = AUDIO_EXT.get(path.extname(target).toLowerCase()) ?? "application/octet-stream";
     const total = stat.size;
@@ -197,7 +208,7 @@ export class LocalMediaLibrary {
           continue;
         }
         const cached = this.state.cache[file];
-        if (cached && cached.mtimeMs === stat.mtimeMs && cached.size === stat.size) {
+        if (cached && cached.mtimeMs === stat.mtimeMs && cached.size === stat.size && cached.codec !== undefined) {
           nextCache[file] = cached;
           continue;
         }
@@ -213,6 +224,11 @@ export class LocalMediaLibrary {
             hasCover: Boolean(meta.common.picture?.length),
             mtimeMs: stat.mtimeMs,
             size: stat.size,
+            codec: meta.format.codec ?? meta.format.container ?? "",
+            lossless: Boolean(meta.format.lossless),
+            ...(meta.format.sampleRate ? { sampleRate: meta.format.sampleRate } : {}),
+            ...(meta.format.bitsPerSample ? { bitsPerSample: meta.format.bitsPerSample } : {}),
+            ...(meta.format.bitrate ? { bitrate: Math.round(meta.format.bitrate) } : {}),
           };
         } catch {
           nextCache[file] = {
@@ -224,6 +240,7 @@ export class LocalMediaLibrary {
             hasCover: false,
             mtimeMs: stat.mtimeMs,
             size: stat.size,
+            codec: "",
           };
         }
       }
@@ -239,4 +256,106 @@ export class LocalMediaLibrary {
 
 export function localMediaUrl(kind: "file" | "cover", filePath: string) {
   return `${LOCAL_MEDIA_SCHEME}://${kind}/${encodePath(filePath)}`;
+}
+
+// last converted aiff, so seeking doesn't convert the whole file again
+let aiffCache: { file: string; mtimeMs: number; wav: Buffer } | null = null;
+
+/** aiff is big-endian pcm, wav is little-endian pcm: swap the bytes and add a wav header */
+export function aiffAsWav(file: string): Buffer {
+  const mtimeMs = fs.statSync(file).mtimeMs;
+  if (aiffCache && aiffCache.file === file && aiffCache.mtimeMs === mtimeMs) return aiffCache.wav;
+  const wav = convertAiff(fs.readFileSync(file));
+  aiffCache = { file, mtimeMs, wav };
+  return wav;
+}
+
+function readExtended80(buf: Buffer, offset: number): number {
+  const exponent = buf.readUInt16BE(offset) & 0x7fff;
+  const hi = buf.readUInt32BE(offset + 2);
+  const lo = buf.readUInt32BE(offset + 6);
+  return (hi * 2 ** 32 + lo) * 2 ** (exponent - 16383 - 63);
+}
+
+export function convertAiff(buf: Buffer): Buffer {
+  if (buf.toString("ascii", 0, 4) !== "FORM") throw new Error("not an aiff file");
+  const form = buf.toString("ascii", 8, 12);
+  let channels = 0;
+  let bits = 0;
+  let rate = 0;
+  let littleEndian = false;
+  let isFloat = false;
+  let data: Buffer | null = null;
+  let pos = 12;
+  while (pos + 8 <= buf.length) {
+    const id = buf.toString("ascii", pos, pos + 4);
+    const size = buf.readUInt32BE(pos + 4);
+    const body = pos + 8;
+    if (id === "COMM") {
+      channels = buf.readUInt16BE(body);
+      bits = buf.readUInt16BE(body + 6);
+      rate = Math.round(readExtended80(buf, body + 8));
+      if (form === "AIFC" && size >= 22) {
+        const compression = buf.toString("ascii", body + 18, body + 22);
+        if (compression === "sowt") littleEndian = true;
+        else if (compression === "fl32" || compression === "FL32") isFloat = true;
+        else if (compression !== "NONE" && compression !== "twos") throw new Error("compressed aiff is not supported");
+      }
+    } else if (id === "SSND") {
+      const offset = buf.readUInt32BE(body);
+      data = buf.subarray(body + 8 + offset, Math.min(buf.length, body + size));
+    }
+    pos = body + size + (size % 2);
+  }
+  if (!data || !channels || !bits || !rate) throw new Error("aiff file is missing audio");
+  const bytes = Math.ceil(bits / 8);
+  const pcm = Buffer.from(data.subarray(0, data.length - (data.length % (bytes * channels))));
+  if (bytes === 1) {
+    // aiff 8-bit is signed, wav 8-bit is unsigned
+    for (let i = 0; i < pcm.length; i++) pcm[i] = (pcm[i]! + 128) & 0xff;
+  } else if (!littleEndian && !isFloat) {
+    for (let i = 0; i < pcm.length; i += bytes) pcm.subarray(i, i + bytes).reverse();
+  } else if (isFloat) {
+    // fl32 is big-endian float
+    for (let i = 0; i < pcm.length; i += 4) pcm.subarray(i, i + 4).reverse();
+  }
+  const header = Buffer.alloc(44);
+  header.write("RIFF", 0, "ascii");
+  header.writeUInt32LE(36 + pcm.length, 4);
+  header.write("WAVEfmt ", 8, "ascii");
+  header.writeUInt32LE(16, 16);
+  header.writeUInt16LE(isFloat ? 3 : 1, 20);
+  header.writeUInt16LE(channels, 22);
+  header.writeUInt32LE(rate, 24);
+  header.writeUInt32LE(rate * channels * bytes, 28);
+  header.writeUInt16LE(channels * bytes, 32);
+  header.writeUInt16LE(bytes * 8, 34);
+  header.write("data", 36, "ascii");
+  header.writeUInt32LE(pcm.length, 40);
+  return Buffer.concat([header, pcm]);
+}
+
+function serveBuffer(buf: Buffer, type: string, range: string | null): Response {
+  const total = buf.length;
+  const match = range ? /bytes=(\d*)-(\d*)/.exec(range) : null;
+  if (match) {
+    const start = match[1] ? Number(match[1]) : 0;
+    const end = match[2] ? Math.min(Number(match[2]), total - 1) : total - 1;
+    if (start >= total || start > end) {
+      return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${total}` } });
+    }
+    return new Response(new Uint8Array(buf.subarray(start, end + 1)), {
+      status: 206,
+      headers: {
+        "Content-Type": type,
+        "Content-Length": String(end - start + 1),
+        "Content-Range": `bytes ${start}-${end}/${total}`,
+        "Accept-Ranges": "bytes",
+      },
+    });
+  }
+  return new Response(new Uint8Array(buf), {
+    status: 200,
+    headers: { "Content-Type": type, "Content-Length": String(total), "Accept-Ranges": "bytes" },
+  });
 }

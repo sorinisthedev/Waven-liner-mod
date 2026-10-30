@@ -15,7 +15,7 @@
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-0b0b10?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.4-111111?style=flat-square">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.5-111111?style=flat-square">
 </p>
 
 <p align="center">
@@ -43,6 +43,7 @@
 - **Make it yours**: profile picture, app wallpapers (gradients or your own image), accent colors, app and lyrics fonts, and a custom theme builder with import and export.
 - **Sound**: 10-band equalizer with presets, crossfade, volume leveling, karaoke mode, a visualizer, a sleep timer and a wake-up alarm.
 - **Your stats**: minutes listened, top songs and artists, when you listen, a full play history and a shareable Wrapped-style card.
+- **Import playlists** from Spotify, YouTube, Apple Music, Deezer and SoundCloud by pasting a link.
 - **Share playlists**: send a link and friends add the whole playlist to their WAVEN in one click.
 - **Faster to use**: a Ctrl+K command palette, a `?` shortcut sheet, pinned playlists in the sidebar and custom playlist icons.
 - **Performance mode**: one click turns off blur and motion to cut CPU, GPU and memory use.
@@ -56,6 +57,10 @@
 New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven-liner-mod/releases) page.
 
 ## Recent changes
+
+**1.1.5**
+- **Import playlists** from Spotify, YouTube, Apple Music, Deezer and SoundCloud: press **Import** in the Library and paste the link. WAVEN finds every song and builds the playlist for you
+- The same Import window opens WAVEN playlist files
 
 **1.1.4**
 - **Share playlists**: press Share on any playlist (or your liked songs) and send the link. Friends click it, press **Add to WAVEN**, and the playlist lands in their library with every song. No account or server needed

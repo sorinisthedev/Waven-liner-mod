@@ -65,6 +65,9 @@ interface ModalState {
   createPlaylistInitialUrl: string;
   createPlaylistPendingTrack: TrackDetail | null;
   openCreatePlaylist: (initialUrl?: string, pendingTrack?: TrackDetail | null) => void;
+  /** opens the create window straight on the Import tab */
+  createPlaylistStartOnImport: boolean;
+  openImportPlaylist: () => void;
   closeCreatePlaylist: () => void;
 
   // Remove from library
@@ -132,6 +135,15 @@ export const useModalStore = create<ModalState>((set) => ({
       createPlaylistOpen: true,
       createPlaylistInitialUrl: initialUrl,
       createPlaylistPendingTrack: pendingTrack,
+      createPlaylistStartOnImport: false,
+    }),
+  createPlaylistStartOnImport: false,
+  openImportPlaylist: () =>
+    set({
+      createPlaylistOpen: true,
+      createPlaylistInitialUrl: "",
+      createPlaylistPendingTrack: null,
+      createPlaylistStartOnImport: true,
     }),
   closeCreatePlaylist: () =>
     set({

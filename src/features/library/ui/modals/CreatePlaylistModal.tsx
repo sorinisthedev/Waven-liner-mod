@@ -14,6 +14,7 @@ import {
 import { useTranslation } from "@/languages";
 import { useModalStore } from "../../store/modalStore";
 import { useImportStore } from "../../store/importStore";
+import { pickPlaylistFile } from "@/features/playlist-share/ui/PlaylistShareDialogs";
 import { resolveApiErrorMessage } from "@/shared/api";
 import { isYoutubeHost } from "@/shared/youtube";
 
@@ -55,6 +56,7 @@ export default function CreatePlaylistModal() {
 
   const open = useModalStore((state) => state.createPlaylistOpen);
   const initialUrl = useModalStore((state) => state.createPlaylistInitialUrl);
+  const startOnImport = useModalStore((state) => state.createPlaylistStartOnImport);
   const pendingTrack = useModalStore(
     (state) => state.createPlaylistPendingTrack,
   );
@@ -80,7 +82,7 @@ export default function CreatePlaylistModal() {
 
   useEffect(() => {
     if (open) {
-      setTab(initialUrl ? "import" : "create");
+      setTab(initialUrl || startOnImport ? "import" : "create");
       setTitle("");
       setDescription("");
       setShowDescription(false);
@@ -88,10 +90,10 @@ export default function CreatePlaylistModal() {
       setCreateError("");
       setImportError("");
       requestAnimationFrame(() =>
-        (initialUrl ? linkRef : titleRef).current?.focus(),
+        (initialUrl || startOnImport ? linkRef : titleRef).current?.focus(),
       );
     }
-  }, [open, initialUrl]);
+  }, [open, initialUrl, startOnImport]);
 
   async function handleCreate() {
     if (createPlaylist.isPending) return;
@@ -318,6 +320,19 @@ export default function CreatePlaylistModal() {
                 {importError}
               </span>
             )}
+            <p className="m-0 text-[12px] leading-relaxed text-text-tertiary" style={font}>
+              {t("common.import_sources_hint")}.{" "}
+              <button
+                type="button"
+                className="border-0 bg-transparent p-0 text-[12px] font-[600] text-text-secondary underline-offset-2 hover:underline hover:text-text-primary cursor-pointer"
+                onClick={() => {
+                  close();
+                  pickPlaylistFile();
+                }}
+              >
+                {t("playlist_share.open_file")}
+              </button>
+            </p>
             <DialogActions className="mt-[6px]">
               <DialogButton type="button" onClick={close}>
                 {t("common.cancel")}

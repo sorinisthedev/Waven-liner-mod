@@ -1874,6 +1874,9 @@ if (!gotTheLock) {
     // updater config: production github releases only, no prereleases or auto-install on close
     autoUpdater.setFeedURL(WAVEN_UPDATE_FEED);
     autoUpdater.autoDownload = false;
+    // always download the whole installer: patching against the last cached
+    // installer breaks when that cache came from a different build
+    autoUpdater.disableDifferentialDownload = true;
     autoUpdater.autoInstallOnAppQuit = false;
     autoUpdater.allowPrerelease = false;
     autoUpdater.allowDowngrade = false;

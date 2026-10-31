@@ -65,6 +65,7 @@ New versions are posted on the [Releases](https://github.com/sorinisthedev/Waven
 - **Output device**: send WAVEN to specific headphones, speakers or a DAC without changing the Windows default
 - **Pure mode**: turns off every effect so audio goes straight to your speakers untouched
 - **AIFF files** now play from your music folders (along with MP3, FLAC, M4A, WAV and OGG)
+- Fixed updates failing with a "checksum mismatch" error
 
 **1.1.5**
 - **Import playlists** from Spotify, YouTube, Apple Music, Deezer and SoundCloud: press **Import** in the Library and paste the link. WAVEN finds every song and builds the playlist for you
